@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siemens S7-1500 R/H Strategy Architect</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        siemens: {
+                            light: '#00cccc',
+                            DEFAULT: '#009990',
+                            dark: '#006660',
+                            bg: '#ebf0f0',
+                            contrast: '#2d3748'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-card { transition: all 0.2s ease; cursor: pointer; border: 2px solid #e5e7eb; }
+        .step-card:hover { transform: translateY(-2px); border-color: #009990; }
+        .step-card.selected { border-color: #009990; background-color: #f0fdfa; ring: 2px solid #009990; }
+        
+        .info-panel { border-top: 1px solid #e2e8f0; margin-top: 2rem; padding-top: 1.5rem; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center text-siemens font-bold text-2xl">
+                        <i class="fa-solid fa-industry mr-2"></i> SIMATIC <span class="text-gray-600 ml-1 font-normal">S7-1500 R/H Architect</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <div class="text-center max-w-3xl mx-auto">
+            <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
+                System Strategy Builder
+            </h1>
+            <p class="mt-4 text-xl text-gray-500">
+                Define redundancy, environment, and communication to generate your technical strategy report.
+            </p>
+        </div>
+
+        <section id="selector" class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 relative z-10">
+            <div class="p-6 bg-gray-900 text-white flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-bold">System Definition Wizard</h2>
+                    <p id="step-display" class="text-gray-400 text-xs mt-1 font-bold uppercase tracking-wider">Project Details</p>
+                </div>
+                <button onclick="resetWizard()" class="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded text-white transition flex items-center shadow-sm">
+                    <i class="fa-solid fa-rotate-left mr-1"></i> Restart
+                </button>
+            </div>
+
+            <div class="p-8">
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-8">
+                    <div id="progressBar" class="bg-siemens h-2 rounded-full transition-all duration-500" style="width: 5%"></div>
+                </div>
+
+                <!-- Product Overview Banner -->
+                <div id="productDetailsSection" class="hidden mb-8 fade-in border-l-4 border-siemens bg-gray-50 p-4 rounded-r shadow-sm">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center">
+                        <i class="fa-solid fa-info-circle text-siemens mr-2"></i> System Overview
+                    </h3>
+                    <p class="text-sm text-gray-600">
+                        The S7-1500R/H system offers scalable redundancy. This tool determines whether standard redundant (R) or high-availability (H) is required based on topology and safety needs.
+                    </p>
+                </div>
+
+                <!-- Step 0 -->
+                <div id="step0" class="wizard-step fade-in">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800"><i class="fa-solid fa-address-card text-siemens mr-2"></i>Project Details</h3>
+                    <div class="space-y-4 max-w-lg mb-8">
+                        <div><label class="block text-sm font-medium text-gray-700">Customer Company Name</label><input type="text" id="contactCompany" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-siemens focus:ring-siemens" placeholder="e.g. Acme Manufacturing"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Customer Contact Name</label><input type="text" id="contactCustomer" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-siemens focus:ring-siemens" placeholder="e.g. John Doe"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Siemens Sales Consultant</label><input type="text" id="contactSales" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-siemens focus:ring-siemens" placeholder="e.g. Jane Smith"></div>
+                    </div>
+                    <button onclick="confirmStep0()" class="bg-siemens hover:bg-siemens-dark text-white px-6 py-2 rounded font-bold text-sm transition shadow-md flex items-center">Start Configuration <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                    
+                    <div class="info-panel">
+                        <h4 class="text-sm font-bold text-siemens mb-2 uppercase tracking-wide">Guidance</h4>
+                        <p class="text-xs text-gray-600 leading-relaxed">This information is utilized for report personalization. Entering accurate project details ensures the generated PDF is ready for professional submission to end-customers and stakeholders.</p>
+                    </div>
+                </div>
+
+                <!-- Step 1: Safety & Environment -->
+                <div id="step1" class="wizard-step hidden fade-in">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800"><i class="fa-solid fa-shield-halved text-siemens mr-2"></i>Safety & Environment</h3>
+                    <div class="mb-6">
+                        <p class="mb-2 text-sm text-gray-700 font-bold">1. Is Failsafe (SIL) required?</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div onclick="handleStep1Safety(true)" id="card-safe-yes" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">Yes, Failsafe</div><p class="text-xs text-gray-500">Requires F-CPU (e.g., 1518HF).</p></div>
+                            <div onclick="handleStep1Safety(false)" id="card-safe-no" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">No, Standard</div><p class="text-xs text-gray-500">Standard logic processing.</p></div>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <p class="mb-2 text-sm text-gray-700 font-bold">2. Is SIPLUS extreme variant required?</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div onclick="handleStep1Siplus(true)" id="card-siplus-yes" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">Yes, SIPLUS</div><p class="text-xs text-gray-500">Harsh environments / Coating.</p></div>
+                            <div onclick="handleStep1Siplus(false)" id="card-siplus-no" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">No, Standard</div><p class="text-xs text-gray-500">Standard environments.</p></div>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <p class="mb-2 text-sm text-gray-700 font-bold">3. Is Explosion Protection (Ex Zone) required?</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div onclick="handleStep1Ex(true)" id="card-ex-yes" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">Yes, Hazardous</div><p class="text-xs text-gray-500">Ex Zone 1/21 or 2/22.</p></div>
+                            <div onclick="handleStep1Ex(false)" id="card-ex-no" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">No, Standard</div><p class="text-xs text-gray-500">Safe Area.</p></div>
+                        </div>
+                    </div>
+                    <button onclick="confirmStep1()" class="bg-siemens hover:bg-siemens-dark text-white px-6 py-2 rounded font-bold text-sm transition shadow-md flex items-center">Next <i class="fa-solid fa-arrow-right ml-2"></i></button>
+
+                    <div class="info-panel">
+                        <h4 class="text-sm font-bold text-siemens mb-2 uppercase tracking-wide">Technical Guidance</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div><p class="text-[10px] font-bold text-gray-500 mb-1">FAILSAFE (SIL)</p><p class="text-[11px] text-gray-600">Selecting safety-integrated immediately filters for the CPU 1518HF, the only redundant CPU with a failsafe runtime (SIL3/PLe). Standard redundant CPUs cannot execute failsafe code blocks.</p></div>
+                            <div><p class="text-[10px] font-bold text-gray-500 mb-1">SIPLUS EXTREME</p><p class="text-[11px] text-gray-600">SIPLUS hardware is conformal coated for resistance against corrosive gases (3C4), salt spray, and condensation, with extended temperature ranges (-40°C to +70°C).</p></div>
+                            <div><p class="text-[10px] font-bold text-gray-500 mb-1">EX PROTECTION</p><p class="text-[11px] text-gray-600">Hazardous area requirements determine the distributed I/O family. Zone 1 typically mandates ET 200iSP, while Zone 2 can be handled by ET 200SP HA or ET 200SP.</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Topology -->
+                <div id="step2" class="wizard-step hidden fade-in">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800"><i class="fa-solid fa-network-wired text-siemens mr-2"></i>PROFINET Topology Needs</h3>
+                    <p class="mb-4 text-sm text-gray-600">Select ALL required redundancy levels for your distributed I/O.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div id="card-topo-R1" onclick="toggleTopology('R1')" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left relative bg-white"><div class="absolute top-2 right-2 text-siemens hidden check-icon"><i class="fa-solid fa-circle-check"></i></div><div class="font-bold text-gray-800">R1</div><p class="text-xs text-gray-500 mt-1">Device Redundancy (2x IMs).</p></div>
+                        <div id="card-topo-S2" onclick="toggleTopology('S2')" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left relative bg-white"><div class="absolute top-2 right-2 text-siemens hidden check-icon"><i class="fa-solid fa-circle-check"></i></div><div class="font-bold text-gray-800">S2</div><p class="text-xs text-gray-500 mt-1">System Redundancy (MRP).</p></div>
+                        <div id="card-topo-S1" onclick="toggleTopology('S1')" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left relative bg-white"><div class="absolute top-2 right-2 text-siemens hidden check-icon"><i class="fa-solid fa-circle-check"></i></div><div class="font-bold text-gray-800">S1</div><p class="text-xs text-gray-500 mt-1">Standard Device (No Redundancy).</p></div>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded border border-gray-200 mb-4"><label class="flex items-center space-x-3"><input type="checkbox" id="chk-hmi" onchange="toggleHMI()" class="h-5 w-5 text-siemens rounded border-gray-300 focus:ring-siemens"><span class="text-sm text-gray-700 font-medium">Include HMI (Unified Comfort) in Ring?</span></label></div>
+                    <div id="topology-hint" class="bg-blue-50 text-blue-800 text-xs p-3 rounded mb-4 hidden"></div>
+                    <button onclick="confirmTopology()" class="bg-siemens hover:bg-siemens-dark text-white px-6 py-2 rounded font-bold text-sm transition shadow-md flex items-center">Next <i class="fa-solid fa-arrow-right ml-2"></i></button>
+
+                    <div class="info-panel">
+                        <h4 class="text-sm font-bold text-siemens mb-2 uppercase tracking-wide">Technical Guidance</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><p class="text-[10px] font-bold text-gray-500 mb-1">R1 VS S2 REDUNDANCY</p><p class="text-[11px] text-gray-600">R1 offers the highest availability by using two physical IMs and redundant cabling. S2 provides logical redundancy to both CPUs via a single interface module. S1 is standard, non-redundant connection.</p></div>
+                            <div><p class="text-[10px] font-bold text-gray-500 mb-1">MIXED RINGS (Y-SWITCH)</p><p class="text-[11px] text-gray-600">If R1 devices are combined with S1/S2 devices in the same physical PROFINET ring, a SCALANCE Y-Switch (DNA) is required to proxy the non-R1 devices without breaking ring integrity.</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Physical -->
+                <div id="step3" class="wizard-step hidden fade-in">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800"><i class="fa-solid fa-server text-siemens mr-2"></i>Physical & Legacy</h3>
+                    <div class="mb-6"><p class="mb-2 text-sm text-gray-700 font-bold">1. Integrate Profibus DP devices?</p><div class="grid grid-cols-2 gap-4"><div onclick="handleStep3Profibus(true)" id="card-pb-yes" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">Yes</div><p class="text-xs text-gray-500">IE/PB Link HA required.</p></div><div onclick="handleStep3Profibus(false)" id="card-pb-no" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">No</div><p class="text-xs text-gray-500">PROFINET Only.</p></div></div></div>
+                    <div class="mb-6"><p class="mb-2 text-sm text-gray-700 font-bold">2. Distance between CPUs?</p><div class="grid grid-cols-2 gap-4"><div onclick="handleStep3Dist('short')" id="card-dist-short" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">Short (< 100m)</div></div><div onclick="handleStep3Dist('long')" id="card-dist-long" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">Long (> 100m)</div></div></div></div>
+                    <button onclick="confirmStep3()" class="bg-siemens hover:bg-siemens-dark text-white px-6 py-2 rounded font-bold text-sm transition shadow-md flex items-center">Next <i class="fa-solid fa-arrow-right ml-2"></i></button>
+
+                    <div class="info-panel">
+                        <h4 class="text-sm font-bold text-siemens mb-2 uppercase tracking-wide">Technical Guidance</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><p class="text-[10px] font-bold text-gray-500 mb-1">PROFIBUS GATEWAYS</p><p class="text-[11px] text-gray-600">S7-1500R/H CPUs do not possess native Profibus ports. Legacy integration requires the IE/PB Link HA, which maps Profibus DP nodes as virtual S2 PROFINET devices to the redundant pair.</p></div>
+                            <div><p class="text-[10px] font-bold text-gray-500 mb-1">SYNCHRONIZATION PHYSICS</p><p class="text-[11px] text-gray-600">R-Systems synchronize over standard copper Ethernet (100m limit). H-Systems utilize dedicated fiber optic modules, supporting CPU separation of up to 40km for disaster recovery architectures.</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div id="step4" class="wizard-step hidden fade-in">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800"><i class="fa-solid fa-microchip text-siemens mr-2"></i>Performance Class Selection</h3>
+                    
+                    <div id="perf-safety-note" class="hidden mb-4 p-4 border-l-4 border-orange-500 bg-orange-50 rounded-r shadow-sm">
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-triangle-exclamation text-orange-600 mt-1 mr-3"></i>
+                            <div>
+                                <p class="text-sm font-bold text-orange-800">Failsafe Requirement Detected</p>
+                                <p class="text-xs text-orange-700 mt-1">Functional safety logic (SIL) requires the CPU 1518HF redundant controller for all performance tiers.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="perf-siplus-note" class="hidden mb-6 p-4 border-l-4 border-blue-500 bg-blue-50 rounded-r shadow-sm">
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-info-circle text-blue-600 mt-1 mr-3"></i>
+                            <div>
+                                <p class="text-sm font-bold text-blue-800">SIPLUS extreme Portfolio Notes</p>
+                                <p class="text-xs text-blue-700 mt-1">The SIPLUS redundant portfolio utilizes the 1515R as its primary entry point. Tiers are adjusted accordingly.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="mb-4 text-sm text-gray-600">Choose the required performance level for your application logic.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div onclick="handleStep4('small')" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">Small</div><div id="perf-model-small" class="text-xs text-siemens font-bold mt-1">Indicator...</div></div>
+                        <div onclick="handleStep4('medium')" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">Medium</div><div id="perf-model-medium" class="text-xs text-siemens font-bold mt-1">Indicator...</div></div>
+                        <div onclick="handleStep4('large')" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">Large</div><div id="perf-model-large" class="text-xs text-siemens font-bold mt-1">Indicator...</div></div>
+                        <div onclick="handleStep4('very_large')" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div id="perf-label-very_large" class="font-bold text-gray-800">Very Large</div><div id="perf-model-very_large" class="text-xs text-siemens font-bold mt-1">Indicator...</div></div>
+                    </div>
+
+                    <div class="info-panel">
+                        <h4 class="text-sm font-bold text-siemens mb-2 uppercase tracking-wide">Technical Selection Criteria</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div id="guide-small"><p class="text-[10px] font-bold text-gray-500 mb-1">SMALL TIER</p><div id="guide-small-content" class="text-[11px] text-gray-600 leading-relaxed">Loading...</div></div>
+                            <div id="guide-medium"><p class="text-[10px] font-bold text-gray-500 mb-1">MEDIUM TIER</p><div id="guide-medium-content" class="text-[11px] text-gray-600 leading-relaxed">Loading...</div></div>
+                            <div id="guide-large"><p class="text-[10px] font-bold text-gray-500 mb-1">LARGE TIER</p><div id="guide-large-content" class="text-[11px] text-gray-600 leading-relaxed">Loading...</div></div>
+                            <div id="guide-very_large"><p class="text-[10px] font-bold text-gray-500 mb-1">VERY LARGE TIER</p><div id="guide-very_large-content" class="text-[11px] text-gray-600 leading-relaxed">Loading...</div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Communication Methods -->
+                <div id="step5" class="wizard-step hidden fade-in">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800"><i class="fa-solid fa-satellite-dish text-siemens mr-2"></i>Communication & Licensing</h3>
+                    <div class="space-y-6 mb-8">
+                        <div>
+                            <p class="mb-2 text-sm text-gray-700 font-bold">1. Is a CP 1543-1 required?</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div onclick="toggleComm('cp1543', true)" id="card-cp-yes" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">Yes, Required</div><p class="text-xs text-gray-500">Northbound / Secured subnets.</p></div>
+                                <div onclick="toggleComm('cp1543', false)" id="card-cp-no" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">No</div><p class="text-xs text-gray-500">Integrated interfaces only.</p></div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="mb-2 text-sm text-gray-700 font-bold">2. Is OPC UA Runtime Licensing required?</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div onclick="toggleComm('opcua', true)" id="card-opc-yes" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">Yes, Required</div><p class="text-xs text-gray-500">Auto-sizing package (S, M, or L).</p></div>
+                                <div onclick="toggleComm('opcua', false)" id="card-opc-no" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">No</div><p class="text-xs text-gray-500">Standard OUC only.</p></div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="mb-2 text-sm text-gray-700 font-bold">3. Is Redundant Modbus/TCP required?</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div onclick="toggleComm('modbus', true)" id="card-mod-yes" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">Yes, Required</div><p class="text-xs text-gray-500">Redundant Open Communication.</p></div>
+                                <div onclick="toggleComm('modbus', false)" id="card-mod-no" class="step-card p-4 border-2 border-gray-200 rounded-lg text-left bg-white"><div class="font-bold text-gray-800">No</div><p class="text-xs text-gray-500">Not required.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="confirmStep5()" class="bg-siemens hover:bg-siemens-dark text-white px-6 py-2 rounded font-bold text-sm transition shadow-md flex items-center">Calculate Result <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                    
+                    <div class="info-panel">
+                        <h4 class="text-sm font-bold text-siemens mb-2 uppercase tracking-wide">Technical Guidance</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div><p class="text-[10px] font-bold text-gray-500 mb-1">CP 1543-1 SECURITY</p><p class="text-[11px] text-gray-600">The CP 1543-1 provides northbound security, including a stateful inspection firewall and VPN. It is essential for isolating the redundant control layer from the corporate plant network.</p></div>
+                            <div><p class="text-[10px] font-bold text-gray-500 mb-1">OPC UA SIZING</p><p class="text-[11px] text-gray-600">OPC UA licenses are sized based on CPU performance. Small (1511/1513), Medium (1515/1516), and Large (1517/1518) packages ensure compliance with runtime requirements.</p></div>
+                            <div><p class="text-[10px] font-bold text-gray-500 mb-1">MODBUS REDUNDANCY</p><p class="text-[11px] text-gray-600">Redundant Modbus/TCP utilizes the Redundant Open User Communication library. Note that performance and feature set vary significantly between TIA Portal V17 and V21.</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Result Page -->
+                <div id="stepResult" class="wizard-step hidden fade-in">
+                    <div class="bg-siemens-bg border-l-4 border-siemens p-6 rounded-r-lg mb-8 shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div><h4 class="text-xs uppercase tracking-wide text-gray-500 font-bold">Strategic Recommendation</h4><h2 id="resultTitle" class="text-3xl font-extrabold text-gray-900 mt-1">CPU Model</h2><p id="resultDesc" class="text-gray-700 mt-2">Description...</p></div>
+                            <div class="hidden md:block"><i class="fa-solid fa-check-circle text-siemens text-5xl opacity-50"></i></div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div>
+                            <h5 class="font-bold text-gray-800 mb-3 border-b pb-2">Analysis Summary</h5>
+                            <ul id="resultReasons" class="list-disc list-inside text-sm text-gray-600 space-y-2 mb-6"></ul>
+                            <div class="bg-white border border-gray-300 rounded p-4 shadow-sm text-sm"><h6 class="font-bold text-gray-700 mb-2">Detected Architecture:</h6><div id="topology-summary" class="space-y-2"></div></div>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 flex flex-col justify-center items-center text-center shadow-inner">
+                            <i class="fa-solid fa-file-contract text-siemens text-4xl mb-4"></i>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">Professional Report</h3>
+                            <button onclick="generateReport()" class="w-full md:w-2/3 bg-siemens hover:bg-siemens-dark text-white font-bold py-3 px-6 rounded shadow transition flex items-center justify-center"><i class="fa-solid fa-download mr-2"></i> Download Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const { jsPDF } = window.jspdf;
+
+        const RESOURCES = {
+            general: [
+                { title: "S7-1500R/H Getting Started Documentation (Direct PDF)", url: "https://cache.industry.siemens.com/dl/files/712/109757712/att_965575/v1/s71500rh_getting_started_en-US_en-US.pdf" },
+                { title: "System Diagnostics with S7-1500R/H", url: "https://support.industry.siemens.com/cs/ww/en/view/109763768" },
+                { title: "S7-1500 Web Server Documentation (Direct PDF)", url: "https://cache.industry.siemens.com/dl/files/246/109977246/att_1307003/v2/s71500_webserver_function_manual_en-US_en-US.pdf" }
+            ],
+            applications: [
+                { title: "Redundant Modbus/TCP Library (Redundant OUC)", url: "https://support.industry.siemens.com/cs/ww/en/view/109763719" },
+                { title: "Safe R1 Redundancy (F-Redundant I/O Library)", url: "https://support.industry.siemens.com/cs/ww/en/view/109995680" },
+                { title: "Automatic Syncup for S7-1500R/H", url: "https://support.industry.siemens.com/cs/ww/en/view/109975117" },
+                { title: "IEC 61850 Client Basic Library", url: "https://support.industry.siemens.com/cs/ww/en/view/109770559" },
+                { title: "PN/PN Coupler for Controller-Controller Communication", url: "https://support.industry.siemens.com/cs/ww/en/view/109781686" }
+            ],
+            R1: [
+                { title: "Reading Active Interface Module (R1)", url: "https://support.industry.siemens.com/cs/ww/en/view/109963780" },
+                { title: "Redundant I/O for S7-1500R/H", url: "https://support.industry.siemens.com/cs/ww/en/view/109767576" }
+            ],
+            nextSteps: [
+                { title: "TIA Selection Tool (Start Project)", url: "https://tiaselectiontool.siemens.com/#/Start" },
+                { title: "PROFINET with S7-1500R/H (Topology Manual)", url: "https://docs.tia.siemens.cloud/r/simatic_s7_1500_et_200mp_manual_collection_enus_21/comprehensive-information/communication-function-manuals/profinet-with-step-7/profinet-with-the-redundant-s7-1500r/h-system" },
+                { title: "SIPLUS extreme ET 200 Portfolio Catalog", url: "https://mall.industry.siemens.com/mall/en/oeii/Catalog/Products/10282494?tree=CatalogTree" }
+            ]
+        };
+
+        const CATALOG = {
+            CPUs: {
+                "1513R": { name: "CPU 1513R-1 PN", desc: "Redundant Controller for standard applications.", nodes: 64, bit: "60ns", if: 1, type: "R", opc: "Small" },
+                "1515R": { name: "CPU 1515R-2 PN", desc: "Redundant Controller with higher performance.", nodes: 128, bit: "20ns", if: 2, type: "R", opc: "Medium" },
+                "1517H": { name: "CPU 1517H-3 PN", desc: "High-Availability Controller (Fiber Sync).", nodes: 512, bit: "2ns", if: 3, type: "H", opc: "Large" },
+                "1518HF": { name: "CPU 1518HF-4 PN", desc: "Failsafe High-Availability Controller.", nodes: "1000+", bit: "1ns", if: 3, type: "H", opc: "Large" },
+                "SIPLUS 1515R": { name: "SIPLUS CPU 1515R-2 PN", desc: "SIPLUS Redundant Controller for extreme environments.", nodes: 128, bit: "20ns", if: 2, type: "R", opc: "Medium" },
+                "SIPLUS 1517H": { name: "SIPLUS CPU 1517H-3 PN", desc: "SIPLUS High-Availability Controller (Fiber Sync).", nodes: 512, bit: "2ns", if: 3, type: "H", opc: "Large" },
+                "SIPLUS 1518HF": { name: "SIPLUS CPU 1518HF-4 PN", desc: "SIPLUS Failsafe High-Availability Controller.", nodes: "1000+", bit: "1ns", if: 3, type: "H", opc: "Large" }
+            }
+        };
+
+        let userChoices = { 
+            contact: { company: "", customer: "", sales: "" },
+            safety: null, siplus: null, ex: null, topology: { R1:false, S2:false, S1:false }, 
+            hmi: false, profibus: false, distance: null, performance: null,
+            comm: { cp1543: false, opcua: false, modbus: false }
+        };
+        let currentRecKey = "1515R"; 
+        let isHSystem = false;
+        let needsYSwitch = false;
+        let needsXCSwitch = false;
+
+        function showStep(id) {
+            const steps = ["step0", "step1", "step2", "step3", "step4", "step5", "stepResult"];
+            steps.forEach(s => {
+                const el = document.getElementById(s);
+                if(el) el.classList.add('hidden');
+            });
+            const target = document.getElementById(id);
+            if(target) target.classList.remove('hidden');
+
+            let stepNum = steps.indexOf(id);
+            let pct = Math.min(100, Math.max(5, (stepNum / 6) * 100));
+            document.getElementById('progressBar').style.width = `${pct}%`;
+
+            const disp = document.getElementById('step-display');
+            if (disp) {
+                if(stepNum === 0) disp.innerText = "Project Details";
+                else if(stepNum === 6) disp.innerText = "Configuration Complete";
+                else disp.innerText = `Step ${stepNum} of 5`;
+            }
+
+            if (id === 'step4') {
+                updatePerformanceLabels();
+            }
+        }
+
+        function updatePerformanceLabels() {
+            const isHNeeded = userChoices.topology.R1 || userChoices.distance === 'long';
+            const mapping = getPerformanceMapping(userChoices.safety, isHNeeded, userChoices.siplus);
+            
+            const safetyNote = document.getElementById('perf-safety-note');
+            const siplusNote = document.getElementById('perf-siplus-note');
+            
+            if (safetyNote) {
+                if (userChoices.safety) safetyNote.classList.remove('hidden');
+                else safetyNote.classList.add('hidden');
+            }
+
+            if (siplusNote) {
+                if (userChoices.siplus && !userChoices.safety) siplusNote.classList.remove('hidden');
+                else siplusNote.classList.add('hidden');
+            }
+
+            ['small', 'medium', 'large', 'very_large'].forEach(level => {
+                const model = mapping[level];
+                const indicatorEl = document.getElementById(`perf-model-${level}`);
+                if (indicatorEl) {
+                    indicatorEl.innerText = `${model}`;
+                }
+
+                const guideContentEl = document.getElementById(`guide-${level}-content`);
+                if (guideContentEl && CATALOG.CPUs[model]) {
+                    const specs = CATALOG.CPUs[model];
+                    guideContentEl.innerHTML = `
+                        Hardware: ${model}<br>
+                        Max PN Nodes: ${specs.nodes}<br>
+                        Bit Perf: ${specs.bit}<br>
+                        Interfaces: ${specs.if} PN
+                    `;
+                }
+            });
+        }
+
+        function getPerformanceMapping(isSafety, isHNeeded, isSiplus) {
+            if (isSiplus) {
+                if (isSafety) return { small: 'SIPLUS 1518HF', medium: 'SIPLUS 1518HF', large: 'SIPLUS 1518HF', very_large: 'SIPLUS 1518HF' };
+                if (isHNeeded) return { small: 'SIPLUS 1517H', medium: 'SIPLUS 1517H', large: 'SIPLUS 1517H', very_large: 'SIPLUS 1518HF' };
+                return { small: 'SIPLUS 1515R', medium: 'SIPLUS 1515R', large: 'SIPLUS 1517H', very_large: 'SIPLUS 1518HF' };
+            }
+            if (isSafety) return { small: '1518HF', medium: '1518HF', large: '1518HF', very_large: '1518HF' };
+            if (isHNeeded) return { small: '1517H', medium: '1517H', large: '1517H', very_large: '1518HF' };
+            return { small: '1513R', medium: '1515R', large: '1517H', very_large: '1518HF' };
+        }
+
+        function resetWizard() {
+            userChoices.safety = null; userChoices.siplus = null; userChoices.ex = null; 
+            userChoices.topology = { R1:false, S2:false, S1:false }; 
+            userChoices.hmi = false; userChoices.profibus = false; userChoices.distance = null; 
+            userChoices.comm = { cp1543: false, opcua: false, modbus: false };
+            document.querySelectorAll('.check-icon').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.step-card').forEach(el => el.classList.remove('selected'));
+            document.getElementById('chk-hmi').checked = false;
+            document.getElementById('topology-hint').classList.add('hidden');
+            document.getElementById('productDetailsSection').classList.add('hidden');
+            showStep('step0');
+        }
+
+        function confirmStep0() {
+            userChoices.contact.company = document.getElementById('contactCompany').value;
+            userChoices.contact.customer = document.getElementById('contactCustomer').value;
+            userChoices.contact.sales = document.getElementById('contactSales').value;
+            const banner = document.getElementById('productDetailsSection');
+            if (banner) banner.classList.remove('hidden');
+            showStep('step1');
+        }
+
+        function handleStep1Safety(val) { userChoices.safety = val; document.getElementById('card-safe-yes').classList.toggle('selected', val); document.getElementById('card-safe-no').classList.toggle('selected', !val); }
+        function handleStep1Siplus(val) { userChoices.siplus = val; document.getElementById('card-siplus-yes').classList.toggle('selected', val); document.getElementById('card-siplus-no').classList.toggle('selected', !val); }
+        function handleStep1Ex(val) { userChoices.ex = val; document.getElementById('card-ex-yes').classList.toggle('selected', val); document.getElementById('card-ex-no').classList.toggle('selected', !val); }
+        function confirmStep1() { if (userChoices.safety === null || userChoices.ex === null || userChoices.siplus === null) { alert("Please make all environmental and safety selections."); return; } showStep('step2'); }
+
+        function toggleTopology(type) { userChoices.topology[type] = !userChoices.topology[type]; const card = document.getElementById(`card-topo-${type}`); const icon = card.querySelector('.check-icon'); if(userChoices.topology[type]) { card.classList.add('selected'); icon.classList.remove('hidden'); } else { card.classList.remove('selected'); icon.classList.add('hidden'); } updateTopoHint(); }
+        function toggleHMI() { userChoices.hmi = document.getElementById('chk-hmi').checked; updateTopoHint(); }
+        function updateTopoHint() { const hint = document.getElementById('topology-hint'); let msgs = []; if(userChoices.topology.R1) msgs.push("R1 requires H-System."); if(userChoices.topology.R1 && (userChoices.topology.S2 || userChoices.topology.S1)) msgs.push("Mixed topology requires Y-Switch."); if(msgs.length > 0) { hint.innerHTML = `<i class="fa-solid fa-lightbulb mr-1"></i> ${msgs.join(" ")}`; hint.classList.remove('hidden'); } else { hint.classList.add('hidden'); } }
+        function confirmTopology() { if (!userChoices.topology.R1 && !userChoices.topology.S2 && !userChoices.topology.S1) { alert("Select at least one topology."); return; } showStep('step3'); }
+
+        function handleStep3Profibus(req) { userChoices.profibus = req; document.getElementById('card-pb-yes').classList.toggle('selected', req); document.getElementById('card-pb-no').classList.toggle('selected', !req); }
+        function handleStep3Dist(dist) { userChoices.distance = dist; document.getElementById('card-dist-short').classList.toggle('selected', dist==='short'); document.getElementById('card-dist-long').classList.toggle('selected', dist==='long'); }
+        function confirmStep3() { if (!userChoices.distance) { alert("Select distance."); return; } showStep('step4'); }
+
+        function handleStep4(perfLevel) { 
+            userChoices.performance = perfLevel;
+            const isHNeeded = userChoices.topology.R1 || userChoices.distance === 'long';
+            const mapping = getPerformanceMapping(userChoices.safety, isHNeeded, userChoices.siplus);
+            currentRecKey = mapping[perfLevel];
+            showStep('step5'); 
+        }
+
+        function toggleComm(field, val) { 
+            userChoices.comm[field] = val; 
+            if(field === 'cp1543') { document.getElementById('card-cp-yes').classList.toggle('selected', val); document.getElementById('card-cp-no').classList.toggle('selected', !val); }
+            if(field === 'opcua') { document.getElementById('card-opc-yes').classList.toggle('selected', val); document.getElementById('card-opc-no').classList.toggle('selected', !val); }
+            if(field === 'modbus') { document.getElementById('card-mod-yes').classList.toggle('selected', val); document.getElementById('card-mod-no').classList.toggle('selected', !val); }
+        }
+
+        function confirmStep5() { calculateResult(); }
+
+        function calculateResult() {
+            isHSystem = currentRecKey.includes("1517H") || currentRecKey.includes("1518HF");
+            needsYSwitch = userChoices.topology.R1 && (userChoices.topology.S2 || userChoices.topology.S1);
+            const cpuType = CATALOG.CPUs[currentRecKey].type;
+            const isRSystem = cpuType === 'R';
+            needsXCSwitch = isRSystem && (userChoices.topology.S1 || userChoices.hmi);
+            
+            const cpu = CATALOG.CPUs[currentRecKey];
+            document.getElementById('resultTitle').innerText = cpu.name;
+            document.getElementById('resultDesc').innerText = cpu.desc;
+            
+            const reasons = [];
+            if (userChoices.siplus) reasons.push("SIPLUS extreme variant (Coated/Extended Temperature).");
+            if (userChoices.safety) reasons.push("Failsafe logic requirement (SIL/PL).");
+            if (userChoices.topology.R1) reasons.push("R1 physical device redundancy requirement.");
+            reasons.push(`Performance tier: ${userChoices.performance.replace('_', ' ').toUpperCase()}.`);
+            if (userChoices.comm.cp1543) reasons.push("Secured northbound CP required.");
+            if (userChoices.comm.opcua) reasons.push(`OPC UA licensing required (${cpu.opc} package).`);
+            if (userChoices.comm.modbus) reasons.push("Redundant Modbus/TCP required.");
+
+            const list = document.getElementById('resultReasons'); list.innerHTML = "";
+            reasons.forEach(r => { const li = document.createElement('li'); li.innerText = r; list.appendChild(li); });
+            
+            const sumDiv = document.getElementById('topology-summary'); sumDiv.innerHTML = "";
+            if (userChoices.topology.R1) sumDiv.innerHTML += `<div class="text-siemens font-bold text-sm mb-1"><i class="fa-solid fa-check mr-2"></i>R1 Topology: Device Redundancy (Critical Availability)</div>`;
+            if (userChoices.topology.S2) sumDiv.innerHTML += `<div class="text-gray-700 text-sm mb-1"><i class="fa-solid fa-check mr-2"></i>S2 Topology: System Redundancy (High Availability)</div>`;
+            if (userChoices.topology.S1) sumDiv.innerHTML += `<div class="text-orange-600 text-sm font-bold mb-1"><i class="fa-solid fa-exclamation-triangle mr-2"></i>S1 Topology: Standard Single Device (Requires Bridging)</div>`;
+            if (userChoices.ex) sumDiv.innerHTML += `<div class="text-red-600 text-sm font-bold mb-1"><i class="fa-solid fa-fire mr-2"></i>Environmental: Hazardous Area (Ex Zone) Requirements</div>`;
+            
+            document.getElementById('productDetailsSection').classList.add('hidden');
+            showStep('stepResult');
+        }
+
+        function generateReport() {
+            const doc = new jsPDF();
+            const cpu = CATALOG.CPUs[currentRecKey];
+            const dateStr = new Date().toLocaleDateString();
+            const pageWidth = 210;
+            const margin = 20;
+            const contentWidth = pageWidth - (margin * 2);
+            const maxY = 280;
+            let y = 20;
+
+            function checkSpace(height) { if (y + height > maxY) { doc.addPage(); y = margin; } }
+
+            function printText(text, fontSize = 10, isBold = false, color = [0, 0, 0], indent = 0) {
+                doc.setFontSize(fontSize);
+                doc.setTextColor(...color);
+                doc.setFont("helvetica", isBold ? "bold" : "normal");
+                const splitText = doc.splitTextToSize(text, contentWidth - indent);
+                const lineHeight = fontSize * 0.3527 * 1.3;
+                checkSpace(splitText.length * lineHeight);
+                doc.text(splitText, margin + indent, y);
+                y += (splitText.length * lineHeight) + 2; 
+            }
+
+            function printBullet(text, fontSize = 10, indent = 5) {
+                doc.setFontSize(fontSize);
+                doc.setTextColor(0,0,0);
+                doc.setFont("helvetica", "normal");
+                const splitText = doc.splitTextToSize(text, contentWidth - indent);
+                const lineHeight = fontSize * 0.3527 * 1.3;
+                checkSpace(splitText.length * lineHeight);
+                doc.text("•", margin + (indent/2), y);
+                doc.text(splitText, margin + indent, y);
+                y += (splitText.length * lineHeight) + 2; 
+            }
+            
+            function printSubBullet(text, fontSize = 9, indent = 10) {
+                 doc.setFontSize(fontSize);
+                 doc.setTextColor(80,80,80);
+                 doc.setFont("helvetica", "normal");
+                 const splitText = doc.splitTextToSize(text, contentWidth - indent);
+                 const lineHeight = fontSize * 0.3527 * 1.3;
+                 checkSpace(splitText.length * lineHeight);
+                 doc.text("-", margin + (indent/2), y);
+                 doc.text(splitText, margin + indent, y);
+                 y += (splitText.length * lineHeight) + 1;
+            }
+
+            function printLink(text, url) {
+                doc.setFontSize(9);
+                doc.setTextColor(0, 0, 255);
+                doc.setFont("helvetica", "normal");
+                const lines = doc.splitTextToSize(text, contentWidth - 10);
+                const lineHeight = 9 * 0.3527 * 1.3;
+                checkSpace(lines.length * lineHeight);
+                lines.forEach((line) => {
+                    const lineWidth = doc.getTextWidth(line);
+                    doc.text(line, margin + 10, y);
+                    doc.link(margin + 10, y - 3.5, lineWidth, 4.5, { url: url });
+                    y += lineHeight;
+                });
+                y += 2;
+                doc.setTextColor(0,0,0);
+            }
+
+            function addSectionHeader(text) {
+                checkSpace(15);
+                y += 5;
+                doc.setFillColor(240, 240, 240);
+                doc.rect(margin, y, contentWidth, 8, 'F');
+                doc.setFontSize(12);
+                doc.setTextColor(0, 153, 144);
+                doc.setFont("helvetica", "bold");
+                doc.text(text.toUpperCase(), margin + 2, y + 5.5);
+                y += 14;
+            }
+
+            doc.setFillColor(0, 153, 144); doc.rect(0, 0, pageWidth, 297, 'F'); 
+            doc.setFillColor(255, 255, 255); doc.rect(15, 15, pageWidth-30, 267, 'F');
+            doc.setTextColor(0, 153, 144); doc.setFontSize(24); doc.setFont("helvetica", "bold");
+            doc.text("Redundant System Strategy Report", 105, 85, {align: 'center'});
+            doc.setTextColor(60, 60, 60); doc.setFontSize(12); doc.setFont("helvetica", "normal");
+            doc.text(`Customer: ${userChoices.contact.company || 'N/A'}`, 105, 130, {align: 'center'});
+            doc.text(`Contact: ${userChoices.contact.customer || 'N/A'}`, 105, 138, {align: 'center'});
+            doc.text(`Consultant: ${userChoices.contact.sales || 'N/A'}`, 105, 150, {align: 'center'});
+            doc.text(`Date: ${dateStr}`, 105, 158, {align: 'center'});
+            doc.addPage(); y = margin;
+
+            addSectionHeader("1. Executive Summary & Scope");
+            printText(`This report defines the architecture for a SIMATIC S7-1500 ${isHSystem?'High Availability (H)':'Redundant (R)'} System. It ensures process continuity by mapping hardware redundancy and PROFINET media topologies to the requirements of ${userChoices.contact.company}.`);
+
+            addSectionHeader("2. Technical Analysis");
+            printText("Analysis Findings:", 10, true);
+            if(userChoices.siplus) printBullet("SIPLUS extreme variant selected for media resistance and coating.");
+            if(userChoices.safety) printBullet("System mandates functional safety logic (SIL3/PLe).");
+            if(userChoices.topology.R1) printBullet("Zero Downtime (R1) device-level redundancy is required.");
+            if(userChoices.ex) printBullet("Explosion Protection (Ex Zone) compliance is required.");
+            if(userChoices.comm.cp1543) printBullet("Secured northbound connections via CP 1543-1 firewall.");
+            if(userChoices.comm.opcua) printBullet("Integrated OPC UA server interoperability required.");
+            
+            printText("Architecture Challenges & Bridging:", 10, true);
+            let risks = false;
+            if(userChoices.topology.R1 && (userChoices.topology.S2 || userChoices.topology.S1)) { printBullet("Mixed Topology detected. S1/S2 devices in R1 ring require a SCALANCE Y-Switch proxy."); risks=true; }
+            if(needsXCSwitch) { printBullet("R-System H-Sync Protocol detected. SCALANCE XC-200 Switch is required for ring integration."); risks=true; }
+            if(!risks) printBullet("No critical topology conflicts detected.");
+
+            addSectionHeader("3. Strategic Recommendations");
+            printText(`Primary Controller: 2x ${cpu.name}`, 10, true);
+            printText("Selection Justification:", 10, true);
+            if(userChoices.siplus) printBullet("SIPLUS extreme variant selected for harsh environment protection.");
+            if(userChoices.safety) printBullet("Failsafe CPU required for safety runtime handling.");
+            if(userChoices.distance === 'long') printBullet("Long distance requires H-Series fiber optic synchronization.");
+            if(userChoices.topology.R1) printBullet("R1 Topology requires H-System for physical redundancy support.");
+            if (!userChoices.siplus && !userChoices.safety && userChoices.distance === 'short' && !userChoices.topology.R1) printBullet("Selected based on memory and bit performance requirements for standard redundancy.");
+
+            if(userChoices.siplus) {
+                y += 5; printText("SIPLUS extreme: Environmental Protection", 10, true);
+                printText("Applications in harsh industrial environments require specialized hardware protection. The selected variant provides:");
+                printBullet("Conformal Coating: Protection against condensation and salt spray (EN 60721-3-3).");
+                printBullet("Chemical Resistance: Certified against corrosive gases (3C4) and sand/dust (3S4).");
+                printBullet("Temperature Range: Extended startup and operational reliability from -40C to +70C.");
+            }
+
+            if (userChoices.comm.cp1543 || userChoices.comm.opcua || userChoices.comm.modbus) {
+                y += 5; printText("Communication & Licensing Strategy:", 10, true);
+                if(userChoices.comm.cp1543) {
+                    printBullet("2x CP 1543-1: Northbound interface with firewall and secure communication (VPN/FTPS).");
+                    if (isHSystem) printBullet("Note: S7-1500H requires an Active Backplane for CP integration.");
+                    else printBullet("Note: S7-1500R integrates CPs via standard U-connectors.");
+                }
+                if(userChoices.comm.opcua) printBullet(`SIMATIC OPC UA S7-1500 ${cpu.opc} Runtime License: Matches CPU performance class.`);
+                if(userChoices.comm.modbus) printBullet("Redundant Modbus/TCP: Utilizing the 'SIMATIC Modbus/TCP Redundant' library and runtime license.");
+            }
+
+            y += 5; printText("Distributed I/O Strategy & Selection Guide:", 10, true);
+            const renderTier = (tierId, tierName, color) => {
+                printText(`${tierName} Strategy:`, 10, true, color);
+                if (userChoices.ex) {
+                    printText("EX Remote IO Stations:", 9, true, [180, 0, 0]);
+                    if (tierId === 'R1') { 
+                        printBullet("ET 200SP HA (Zone 2): Specialist for maximum uptime R1 physical redundancy."); 
+                        printBullet("ET 200iSP (Zone 1 and Zone 2): Intrinsically safe distributed I/O for hazardous atmospheres. Supports physical R1 module redundancy."); 
+                        printBullet("ET 200SP R1 (Zone 2): Standard cabinet I/O with redundant interface. Note: Configurable for Ex ratings using HA Ex-IO modules.");
+                    } else { 
+                        printBullet("ET 200SP HA (Zone 2): High-density process automation platform."); 
+                        printBullet("ET 200iSP (Zone 1 and Zone 2): Intrinsically safe distributed I/O for hazardous atmospheres."); 
+                        printBullet("ET 200SP (Zone 2): Modular I/O. Note: Supports HA Ex-IO modules."); 
+                    }
+                }
+                printText("Standard Area Applications:", 9, true, [0, 100, 0]);
+                if (tierId === 'R1') { 
+                    printBullet("ET 200SP HA: High-density platform for critical availability."); 
+                    printBullet("ET 200iSP: Extreme robust field connections for rugged environment reliability."); 
+                    printBullet("ET 200SP R1: Standard redundant interface station.");
+                } else if (tierId === 'S2') { 
+                    printBullet("ET 200SP: Universal modular I/O system. Ideal for logical redundancy."); 
+                    printBullet("ET 200MP: High-density S7-1500 form factor I/O. (Note: Active Backplane required)."); 
+                    printBullet("ET 200SP HA: High-density platform for critical availability."); 
+                    printBullet("ET 200iSP: Extreme robust field connections for rugged environment reliability."); 
+                    printBullet("ET 200AL: Ultra-compact IP65/67 I/O for distributed mounting on moving parts."); 
+                } else { 
+                    printBullet("ET 200SP: Universal modular system."); 
+                    printBullet("ET 200MP: S7-1500 form factor. (Note: Active Backplane required for hotswap feature)."); 
+                    printBullet("ET 200pro: Cabinet-free IP65/67 modular I/O for machine mounting."); 
+                    printBullet("ET 200eco PN: Rugged block I/O with IP67/69K protection."); 
+                    printBullet("ET 200AL: Ultra-compact IP65/67 I/O for distributed mounting on moving parts."); 
+                    printBullet("ET 200SP HA: High-density platform for critical availability."); 
+                    printBullet("ET 200iSP: Extreme robust field connections for rugged environment reliability."); 
+                }
+            };
+            if (userChoices.topology.R1 && isHSystem) renderTier("R1", "Tier 1: R1", [0, 102, 204]);
+            if (userChoices.topology.S2) renderTier("S2", "Tier 2: S2", [0, 153, 144]);
+            if (userChoices.topology.S1) renderTier("S1", "Tier 3: S1", [80, 80, 80]);
+
+            if(needsYSwitch || needsXCSwitch || userChoices.profibus) {
+                y += 5; printText("Connectivity & Bridging Justification:", 10, true);
+                if(needsYSwitch) printBullet("SCALANCE XF204-2BA DNA (Y-Switch): Necessary for hosting S1/S2 devices in R1 rings.");
+                if(needsXCSwitch) printBullet("SCALANCE XC-200 Switch: Mandatory to handle transparent forwarding of H-Sync frames.");
+                if(userChoices.profibus) printBullet("IE/PB Link HA: Bridges Profibus DP fieldbus devices to redundant PROFINET.");
+            }
+
+            addSectionHeader("4. Conclusion");
+            let cP = [];
+            if (userChoices.topology.R1) cP.push(`This architecture is prioritized for critical availability, utilizing an R1/H-System topology to eliminate single points of failure.`);
+            else if (isHSystem) cP.push(`The high-availability (H-System) backbone provides rapid 50ms switchover and fiber synchronization.`);
+            else cP.push(`The redundant (R-System) configuration offers cost-effective redundancy via PROFINET MRP ring.`);
+            
+            if (userChoices.comm.cp1543) cP.push(`Northbound security is assured via the CP 1543-1 firewall.`);
+            if (userChoices.comm.opcua) cP.push(`Integrated OPC UA (Package ${cpu.opc}) provides standardized interoperability.`);
+            if (needsXCSwitch) cP.push(`The SCALANCE XC-200 series handles the transparent forwarding of H-Sync frames.`);
+            
+            printText(cP.join(" "));
+
+            addSectionHeader("5. Reference Documents");
+            printLink("• Siemens Redundant CPUs Overview", "https://www.siemens.com/global/en/products/automation/systems/industrial/plc/simatic-s7-1500/redundant-and-high-availability-cpus.html");
+            if (userChoices.topology.R1) printLink("• R1 Topology Selection and Configuration Guide", "https://docs.tia.siemens.cloud/r/simatic_s7_1500_et_200mp_manual_collection_frfr_21/basic-information/s7-1500r/h-redundant-system/application-planning/configuration-versions/specific-configuration-variants-for-s7-1500h/configuration-of-line-topology-with-r1-devices");
+            if (userChoices.topology.S2) printLink("• PROFINET Configuration with S2 Devices", "https://docs.tia.siemens.cloud/r/simatic_s7_1500_et_200mp_manual_collection_frfr_21/basic-information/s7-1500r/h-redundant-system/application-planning/configuration-versions/s7-1500r/h-configuration-with-io-devices-in-the-profinet-ring");
+            if (needsYSwitch) printLink("• PROFINET Rings with R1 Devices and Y-Switch with S2 Devices", "https://docs.tia.siemens.cloud/r/simatic_s7_1500_et_200mp_manual_collection_frfr_21/basic-information/s7-1500r/h-redundant-system/application-planning/configuration-versions/specific-configuration-variants-for-s7-1500h/line-topology-configuration-with-r1-devices-and-y-switch-with-s2-devices");
+            if(needsXCSwitch) printLink("• PROFINET H-Sync Forwarding Manual", "https://docs.tia.siemens.cloud/r/simatic_et_200clean_manual_collection_zhcn_20/function-manuals/communication-function-manuals/profinet-with-step-7/profinet-with-the-redundant-s7-1500r/h-system/h-sync-forwarding");
+            
+            addSectionHeader("6. Application Examples");
+            RESOURCES.general.forEach(r => { printLink("• " + r.title, r.url); });
+            RESOURCES.applications.forEach(app => {
+                let include = false;
+                if (app.title.includes("R1") && userChoices.topology.R1) include = true;
+                else if (app.title.includes("S2") && userChoices.topology.S2) include = true;
+                else if (app.title.includes("Modbus") && userChoices.comm.modbus) include = true;
+                else if (!app.title.includes("R1") && !app.title.includes("S2") && !app.title.includes("Modbus")) include = true;
+                
+                if (include) printLink("• " + app.title, app.url);
+            });
+
+            addSectionHeader("7. Next Steps & Implementation");
+            printText("Recommended implementation steps:");
+            printBullet("Build Bill of Materials (BOM): Use TIA Selection Tool for precise part numbers.");
+            printLink("• Start TIA Selection Tool", "https://tiaselectiontool.siemens.com/#/Start");
+            if (userChoices.siplus) {
+                printBullet("Verify SIPLUS extreme Hardware: Manually select conformal coated variants in the selection tool.");
+                printLink("• View SIPLUS extreme ET 200 Catalog", "https://mall.industry.siemens.com/mall/en/oeii/Catalog/Products/10282494?tree=CatalogTree");
+            }
+            printBullet("Design Network Topology: Plan rings and H-Sync forwarding configuration.");
+            printLink("• View PROFINET Manual", "https://docs.tia.siemens.cloud/r/simatic_s7_1500_et_200mp_manual_collection_enus_21/comprehensive-information/communication-function-manuals/profinet-with-step-7/profinet-with-the-redundant-s7-1500r/h-system");
+            printBullet("Verify TIA Portal Version: Ensure your environment (V17-V21) supports selected firmware and redundant features.");
+
+            // Disclaimer
+            y += 5;
+            doc.setFillColor(240, 240, 240);
+            doc.rect(margin, y, contentWidth, 20, 'F');
+            doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
+            doc.text("Disclaimer of Liability", margin + 2, y + 4);
+            const disclaimerText = "This report is provided for informational purposes only. The Strategy Architect serves as a data processing utility and does not provide professional advice or guaranteed configurations. The User assumes all risk and total responsibility for the selection, suitability, and compatibility of any parts listed in this report. The Developer accepts no liability for any errors, omissions, or incorrect part suggestions, regardless of the accuracy of the inputs provided. The final decision to purchase or implement any part rests exclusively with the User.";
+            const splitDisclaimer = doc.splitTextToSize(disclaimerText, contentWidth - 4);
+            doc.text(splitDisclaimer, margin + 2, y + 8);
+
+            doc.save('Redundant_System_Strategy.pdf');
+        }
+
+        window.onload = function() { showStep('step0'); };
+    </script>
+</body>
+</html>
