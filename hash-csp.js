@@ -2,7 +2,8 @@
 const fs = require('fs');
 const crypto = require('crypto');
 
-const FILE_NAME = 'S71500RH Strategy Architect_v2.html';
+// Target the new v3 file
+const FILE_NAME = 'S71500RH Strategy Architect_v3.html';
 
 function generateCSP() {
     try {
@@ -40,7 +41,7 @@ function generateCSP() {
 
         fs.writeFileSync(FILE_NAME, updatedContent, 'utf8');
 
-        console.log(`✅ Success! Updated CSP with split policy.`);
+        console.log(`✅ Success! Updated CSP for v3.`);
         console.log(`New CSP: ${newCspContent}`);
     } catch (err) {
         console.error("❌ Error processing file:", err.message);
