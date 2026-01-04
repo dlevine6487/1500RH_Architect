@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S7-1500 R/H Redundancy Resource Repository</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            background-color: #00646e; /* Siemens Petroleum */
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .category-header {
+            background-color: #ebf1f0;
+            padding: 10px 15px;
+            border-left: 5px solid #00646e;
+            margin: 20px 0 10px 0;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #009999;
+            color: white;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .btn-link {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #00646e;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .btn-link:hover {
+            background-color: #004b52;
+        }
+        .id-badge {
+            font-family: monospace;
+            background: #eee;
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>SIMATIC S7-1500 R/H Engineering Repository</h1>
+        <p>A structured guide to Application Examples, Libraries, and Documentation</p>
+    </header>
+
+    <input type="text" id="searchInput" class="search-box" placeholder="Search for libraries, hardware, or functions (e.g., 'Safety', 'HMI', 'Sync')...">
+
+    <div class="category-header">System Diagnostics & Operating State Control</div>
+    <table id="diagTable">
+        <thead>
+            <tr>
+                <th>Resource Name</th>
+                <th>Entry ID</th>
+                <th>Description</th>
+                <th>Direct Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>R_H_Sys_Status</b></td>
+                <td><span class="id-badge">109763768</span></td>
+                <td>Core FB to evaluate operating states, CPU roles (Primary/Backup), and MRP ring status.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109763768" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+            <tr>
+                <td><b>Automatic SYNCUP</b></td>
+                <td><span class="id-badge">109975117</span></td>
+                <td>Logic to automatically trigger a SYNCUP after power restoration or CPU replacement.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109975117" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+            <tr>
+                <td><b>Switching System IP</b></td>
+                <td><span class="id-badge">109972846</span></td>
+                <td>Logic to manually or automatically move the System IP address between different CPU interfaces.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109972846" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+            <tr>
+                <td><b>PN Watchdog Add-In</b></td>
+                <td><span class="id-badge">109769093</span></td>
+                <td>TIA Portal Add-In to centrally manage PROFINET watchdog factors in redundant rings.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109769093" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="category-header">Redundant Communication & Networking</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Resource Name</th>
+                <th>Entry ID</th>
+                <th>Description</th>
+                <th>Direct Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>LComRed (Redundant OUC)</b></td>
+                <td><span class="id-badge">109763719</span></td>
+                <td>Library for redundant Open User Communication (TCP/ISO-on-TCP) over multiple paths.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109763719" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+            <tr>
+                <td><b>IEC 61850 Client</b></td>
+                <td><span class="id-badge">109779565</span></td>
+                <td>Library to connect redundant S7-1500 R/H systems to substation IED devices via MMS.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109779565" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+            <tr>
+                <td><b>XF204BA DNA Y-Switch</b></td>
+                <td><span class="id-badge">109816704</span></td>
+                <td>Guide for using DNA switches to connect standard S1/S2 devices to R1 redundancy rings.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109816704" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+            <tr>
+                <td><b>MRP Ring Configuration</b></td>
+                <td><span class="id-badge">109739614</span></td>
+                <td>Basic setup guide for Media Redundancy Protocol (MRP) in S7-1500 topologies.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109739614" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="category-header">I/O Redundancy & Safety (Standard & Failsafe)</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Resource Name</th>
+                <th>Entry ID</th>
+                <th>Description</th>
+                <th>Direct Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>LRedIO (Standard Redundant IO)</b></td>
+                <td><span class="id-badge">109767576</span></td>
+                <td>Software blocks to pair standard DI/DQ/AI/AQ modules for signal-level redundancy.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109767576" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+            <tr>
+                <td><b>LSafe FRed-IO (Safety Redundant)</b></td>
+                <td><span class="id-badge">109995680</span></td>
+                <td>Library for implementing redundant safety-related F-I/O modules (F-DI, F-DQ, F-AI).</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109995680" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+            <tr>
+                <td><b>LSafe Vote&Scale</b></td>
+                <td><span class="id-badge">109826840</span></td>
+                <td>Safety library for 1oo2, 2oo3 voting logic and scaling of safety analog values.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109826840" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+            <tr>
+                <td><b>GetActiveR1Im</b></td>
+                <td><span class="id-badge">109963780</span></td>
+                <td>Diagnostics FB to determine which ET 200SP R1 Interface Module is currently active.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109963780" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+            <tr>
+                <td><b>SINAMICS G220 S2</b></td>
+                <td><span class="id-badge">109926733</span></td>
+                <td>Example of implementing PROFINET S2 system redundancy with the G220 drive.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109926733" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="category-header">HMI Integration & Power Supply Diagnostics</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Resource Name</th>
+                <th>Entry ID</th>
+                <th>Description</th>
+                <th>Direct Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>WinCC Unified for R/H</b></td>
+                <td><span class="id-badge">109781687</span></td>
+                <td>Integration strategies for WinCC Unified, including System-IP and Device-IP switching scripts.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109781687" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+            <tr>
+                <td><b>SITOP PSU6200 Library</b></td>
+                <td><span class="id-badge">109760217</span></td>
+                <td>Communication blocks and faceplates for integrating SITOP PSU6200 status into R/H systems.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109760217" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+            <tr>
+                <td><b>SITOP SEL1200/1400</b></td>
+                <td><span class="id-badge">109763709</span></td>
+                <td>Diagnostic library for selectivity modules using Manchester code via digital input.</td>
+                <td><a href="https://support.industry.siemens.com/cs/ww/en/view/109763709" target="_blank" class="btn-link">View Entry</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Simple Search Functionality
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toUpperCase();
+        let rows = document.querySelectorAll('tbody tr');
+        
+        rows.forEach(row => {
+            let text = row.innerText.toUpperCase();
+            row.style.display = text.indexOf(filter) > -1 ? '' : 'none';
+        });
+    });
+</script>
+
+</body>
+</html>
