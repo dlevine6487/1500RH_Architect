@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'sha256-0kaYYq3qitkkVZpP/6uKTJwfTpqFNM6OHDbsaYzw9Uw=' 'sha256-mMzxeqEMILsTAXYmGPzJtqs6Tn8mtgcdZNC0EVTfOHU=' 'sha256-zoF3GF/5hG//rdcqzu9eLRAWQByftkRGvMa5WJZXPTw='; style-src 'self' 'unsafe-inline';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'sha256-0kaYYq3qitkkVZpP/6uKTJwfTpqFNM6OHDbsaYzw9Uw=' 'sha256-mMzxeqEMILsTAXYmGPzJtqs6Tn8mtgcdZNC0EVTfOHU=' 'sha256-yMIg7F3kC+jZiSTPnfr1dtQKWV8W3qCMFcD8DfVcFys='; style-src 'self' 'unsafe-inline';">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Siemens S7-1500 R/H Strategy Architect</title>
@@ -645,250 +645,188 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 //# sourceMappingURL=jspdf.umd.min.js.map
 </script>
 <style>
+/* CSS Variables & Dark Mode */
+:root {
+    --bg-body: #f9fafb;
+    --bg-card: #ffffff;
+    --text-main: #111827;
+    --text-muted: #6b7280;
+    --primary: #009990;
+    --primary-dark: #006660;
+    --border: #e5e7eb;
+    --border-hover: #009990;
+    --highlight: #f0fdfa;
+    --shadow: rgba(0,0,0,0.1);
+}
+
+[data-theme="dark"] {
+    --bg-body: #111827;
+    --bg-card: #1f2937;
+    --text-main: #f9fafb;
+    --text-muted: #9ca3af;
+    --primary: #00b2a9;
+    --primary-dark: #2dd4bf;
+    --border: #374151;
+    --border-hover: #00b2a9;
+    --highlight: #134e4a;
+    --shadow: rgba(0,0,0,0.5);
+}
+
 /* Base defaults */
-body { margin: 0; line-height: inherit; }
-*, ::before, ::after { box-sizing: border-box; border-width: 0; border-style: solid; border-color: #e5e7eb; }
-html { line-height: 1.5; -webkit-text-size-adjust: 100%; -moz-tab-size: 4; tab-size: 4; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }
-button, input, optgroup, select, textarea { font-family: inherit; font-size: 100%; line-height: 1.15; margin: 0; }
-button, [type='button'], [type='reset'], [type='submit'] { -webkit-appearance: button; }
-button { background-color: transparent; background-image: none; cursor: pointer; }
+body { margin: 0; line-height: inherit; background-color: var(--bg-body); color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
+*, ::before, ::after { box-sizing: border-box; border-width: 0; border-style: solid; border-color: var(--border); }
+html { line-height: 1.5; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+button { background-color: transparent; cursor: pointer; }
 
-/* Colors */
+/* Utility Classes with Variables */
+.bg-body { background-color: var(--bg-body); }
+.bg-card { background-color: var(--bg-card); }
+.text-main { color: var(--text-main); }
+.text-muted { color: var(--text-muted); }
+.text-primary { color: var(--primary); }
+.bg-primary { background-color: var(--primary); }
+.border-color { border-color: var(--border); }
+
+.step-card {
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 2px solid var(--border);
+    background-color: var(--bg-card);
+}
+.step-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-hover);
+}
+.step-card.selected {
+    border-color: var(--primary);
+    background-color: var(--highlight);
+    box-shadow: 0 0 0 2px var(--primary);
+}
+.info-panel { border-top: 1px solid var(--border); margin-top: 2rem; padding-top: 1.5rem; }
+
+/* Reusing utility classes but mapping them to variables where possible or keeping standard */
 .text-white { color: #ffffff; }
-.text-gray-400 { color: #9ca3af; }
-.text-gray-500 { color: #6b7280; }
-.text-gray-600 { color: #4b5563; }
-.text-gray-700 { color: #374151; }
-.text-gray-800 { color: #1f2937; }
-.text-gray-900 { color: #111827; }
-.text-blue-600 { color: #2563eb; }
-.text-blue-700 { color: #1d4ed8; }
-.text-blue-800 { color: #1e40af; }
-.text-orange-600 { color: #ea580c; }
-.text-orange-700 { color: #c2410c; }
-.text-orange-800 { color: #9a3412; }
-.text-red-600 { color: #dc2626; }
-.text-siemens { color: #009990; }
+.bg-gray-50 { background-color: var(--bg-body); }
+.bg-white { background-color: var(--bg-card); }
+.bg-gray-900 { background-color: #111827; } /* Keep navbar dark */
 
-.bg-white { background-color: #ffffff; }
-.bg-gray-50 { background-color: #f9fafb; }
-.bg-gray-200 { background-color: #e5e7eb; }
-.bg-gray-700 { background-color: #374151; }
-.bg-gray-900 { background-color: #111827; }
-.bg-blue-50 { background-color: #eff6ff; }
-.bg-orange-50 { background-color: #fff7ed; }
-.bg-siemens { background-color: #009990; }
-.bg-siemens-bg { background-color: #ebf0f0; }
-.bg-siemens-dark { background-color: #006660; }
-
-.hover\:bg-gray-600:hover { background-color: #4b5563; }
-.hover\:bg-siemens-dark:hover { background-color: #006660; }
-
-.border-gray-200 { border-color: #e5e7eb; }
-.border-gray-300 { border-color: #d1d5db; }
-.border-blue-500 { border-color: #3b82f6; }
-.border-orange-500 { border-color: #f97316; }
-.border-siemens { border-color: #009990; }
-.focus\:border-siemens:focus { border-color: #009990; }
-
-/* Typography */
-.font-sans { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-.font-normal { font-weight: 400; }
-.font-medium { font-weight: 500; }
-.font-semibold { font-weight: 600; }
-.font-bold { font-weight: 700; }
-.font-extrabold { font-weight: 800; }
-.text-xs { font-size: 0.75rem; line-height: 1rem; }
-.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
-.text-base { font-size: 1rem; line-height: 1.5rem; }
-.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
-.text-xl { font-size: 1.25rem; line-height: 1.75rem; }
-.text-2xl { font-size: 1.5rem; line-height: 2rem; }
-.text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
-.text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
-.text-5xl { font-size: 3rem; line-height: 1; }
-.text-\[10px\] { font-size: 10px; }
-.text-\[11px\] { font-size: 11px; }
-
-.uppercase { text-transform: uppercase; }
-.tracking-tight { letter-spacing: -0.025em; }
-.tracking-wide { letter-spacing: 0.025em; }
-.tracking-wider { letter-spacing: 0.05em; }
-.list-disc { list-style-type: disc; }
-.list-inside { list-style-position: inside; }
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.antialiased { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-.leading-relaxed { line-height: 1.625; }
-.italic { font-style: italic; }
-
-/* Spacing */
-.p-2 { padding: 0.5rem; }
-.p-3 { padding: 0.75rem; }
-.p-4 { padding: 1rem; }
-.p-6 { padding: 1.5rem; }
-.p-8 { padding: 2rem; }
-.px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
-.px-4 { padding-left: 1rem; padding-right: 1rem; }
-.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
-.py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; }
-.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-.py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
-.py-8 { padding-top: 2rem; padding-bottom: 2rem; }
-.pb-2 { padding-bottom: 0.5rem; }
-.pt-1\.5 { padding-top: 0.375rem; }
-
-.m-0 { margin: 0; }
-.mt-1 { margin-top: 0.25rem; }
-.mt-2 { margin-top: 0.5rem; }
-.mt-3 { margin-top: 0.75rem; }
-.mt-4 { margin-top: 1rem; }
-.mr-1 { margin-right: 0.25rem; }
-.mr-2 { margin-right: 0.5rem; }
-.mr-3 { margin-right: 0.75rem; }
-.ml-1 { margin-left: 0.25rem; }
-.ml-2 { margin-left: 0.5rem; }
-.mb-1 { margin-bottom: 0.25rem; }
-.mb-2 { margin-bottom: 0.5rem; }
-.mb-3 { margin-bottom: 0.75rem; }
-.mb-4 { margin-bottom: 1rem; }
-.mb-6 { margin-bottom: 1.5rem; }
-.mb-8 { margin-bottom: 2rem; }
-.mx-auto { margin-left: auto; margin-right: auto; }
-
-.space-y-2 > :not([hidden]) ~ :not([hidden]) { --tw-space-y-reverse: 0; margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse))); margin-bottom: calc(0.5rem * var(--tw-space-y-reverse)); }
-.space-y-4 > :not([hidden]) ~ :not([hidden]) { --tw-space-y-reverse: 0; margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse))); margin-bottom: calc(1rem * var(--tw-space-y-reverse)); }
-.space-y-6 > :not([hidden]) ~ :not([hidden]) { --tw-space-y-reverse: 0; margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse))); margin-bottom: calc(1.5rem * var(--tw-space-y-reverse)); }
-.space-y-12 > :not([hidden]) ~ :not([hidden]) { --tw-space-y-reverse: 0; margin-top: calc(3rem * calc(1 - var(--tw-space-y-reverse))); margin-bottom: calc(3rem * var(--tw-space-y-reverse)); }
-.space-x-3 > :not([hidden]) ~ :not([hidden]) { --tw-space-x-reverse: 0; margin-right: calc(0.75rem * var(--tw-space-x-reverse)); margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse))); }
-
-/* Sizing */
-.w-5 { width: 1.25rem; }
-.w-16 { width: 4rem; }
-.w-full { width: 100%; }
-.h-2 { height: 0.5rem; }
-.h-5 { height: 1.25rem; }
-.h-12 { height: 3rem; }
-.h-16 { height: 4rem; }
-.max-w-lg { max-width: 32rem; }
-.max-w-3xl { max-width: 48rem; }
-.max-w-7xl { max-width: 80rem; }
-
-/* Layout */
+/* Layout & Spacing (Preserved from v2) */
 .block { display: block; }
 .hidden { display: none; }
 .flex { display: flex; }
 .grid { display: grid; }
 .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
 .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .flex-col { flex-direction: column; }
-.flex-shrink-0 { flex-shrink: 0; }
 .justify-between { justify-content: space-between; }
-.justify-center { justify-content: center; }
 .items-center { align-items: center; }
-.items-start { align-items: flex-start; }
 .gap-4 { gap: 1rem; }
 .gap-6 { gap: 1.5rem; }
-.gap-8 { gap: 2rem; }
-.sticky { position: sticky; }
-.absolute { position: absolute; }
-.relative { position: relative; }
-.top-0 { top: 0px; }
-.top-2 { top: 0.5rem; }
-.right-2 { right: 0.5rem; }
-.z-10 { z-index: 10; }
-.z-50 { z-index: 50; }
-.overflow-hidden { overflow: hidden; }
-
-/* Borders & Rounded */
-.border { border-width: 1px; }
-.border-2 { border-width: 2px; }
-.border-b { border-bottom-width: 1px; }
-.border-l-4 { border-left-width: 4px; }
-.rounded { border-radius: 0.25rem; }
-.rounded-md { border-radius: 0.375rem; }
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.p-8 { padding: 2rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mt-4 { margin-top: 1rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.w-full { width: 100%; }
+.max-w-7xl { max-width: 80rem; }
 .rounded-lg { border-radius: 0.5rem; }
-.rounded-xl { border-radius: 0.75rem; }
 .rounded-2xl { border-radius: 1rem; }
-.rounded-full { border-radius: 9999px; }
-.rounded-r { border-top-right-radius: 0.25rem; border-bottom-right-radius: 0.25rem; }
-.rounded-r-lg { border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem; }
+.shadow-xl { box-shadow: 0 20px 25px -5px var(--shadow); }
+.shadow-md { box-shadow: 0 4px 6px -1px var(--shadow); }
 
-/* Effects */
-.shadow { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); }
-.shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
-.shadow-md { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
-.shadow-xl { box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
-.shadow-inner { box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05); }
-.opacity-50 { opacity: 0.5; }
-.transition { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
-.transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
-.duration-500 { transition-duration: 500ms; }
-.focus\:ring-siemens:focus { --tw-ring-color: #009990; --tw-ring-opacity: 1; --tw-ring-width: 3px; box-shadow: var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color); outline: 2px solid transparent; outline-offset: 2px; }
+/* Typography */
+.font-bold { font-weight: 700; }
+.text-2xl { font-size: 1.5rem; }
+.text-4xl { font-size: 2.25rem; }
+.text-center { text-align: center; }
+.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.75rem; }
 
-/* Responsive */
-@media (min-width: 640px) {
-  .sm\:px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
-  .sm\:text-5xl { font-size: 3rem; line-height: 1; }
-}
-@media (min-width: 768px) {
-  .md\:block { display: block; }
-  .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .md\:w-2\/3 { width: 66.666667%; }
-}
-@media (min-width: 1024px) {
-  .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .lg\:px-8 { padding-left: 2rem; padding-right: 2rem; }
-}
-
-/* Icons */
-.svg-icon { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertical-align: -0.125em; }
-
-/* Custom Styles */
+/* Animations */
 .fade-in { animation: fadeIn 0.5s ease-in-out; opacity: 1; }
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-.step-card { transition: all 0.2s ease; cursor: pointer; border: 2px solid #e5e7eb; }
-.step-card:hover { transform: translateY(-2px); border-color: #009990; }
-.step-card.selected { border-color: #009990; background-color: #f0fdfa; box-shadow: 0 0 0 2px #009990; }
-.step-card.selected .check-icon { display: block; }
-
-.info-panel { border-top: 1px solid #e2e8f0; margin-top: 2rem; padding-top: 1.5rem; }
+/* Specific Component Styles */
+.svg-icon { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertical-align: -0.125em; }
+.nav-btn {
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    color: var(--text-muted);
+}
+.nav-btn:hover {
+    background-color: var(--highlight);
+    color: var(--primary);
+}
 </style>
 
 
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+<body class="bg-body font-sans antialiased transition-colors duration-300">
 
-    <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="bg-gray-900 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0 flex items-center text-siemens font-bold text-2xl">
-                        <svg class="svg-icon mr-2" viewBox="0 0 512 512"><path d="M475.115 163.781L336 252.309v-68.28c0-18.916-20.931-30.399-36.885-20.248L160 252.309V56c0-13.255-10.745-24-24-24H24C10.745 32 0 42.745 0 56v400c0 13.255 10.745 24 24 24h464c13.255 0 24-10.745 24-24V184.029c0-18.917-20.931-30.399-36.885-20.248z"/></svg> SIMATIC <span class="text-gray-600 ml-1 font-normal">S7-1500 R/H Architect</span>
+                    <div class="flex-shrink-0 flex items-center text-primary font-bold text-2xl">
+                        <svg class="svg-icon mr-2" viewBox="0 0 512 512"><path d="M475.115 163.781L336 252.309v-68.28c0-18.916-20.931-30.399-36.885-20.248L160 252.309V56c0-13.255-10.745-24-24-24H24C10.745 32 0 42.745 0 56v400c0 13.255 10.745 24 24 24h464c13.255 0 24-10.745 24-24V184.029c0-18.917-20.931-30.399-36.885-20.248z"/></svg>
+                        <span class="text-white">SIMATIC</span> <span class="text-gray-400 ml-1 font-normal">S7-1500 R/H Architect v3</span>
                     </div>
+                </div>
+                <div class="flex items-center">
+                     <button id="theme-toggle" class="nav-btn" aria-label="Toggle Dark Mode">
+                        <svg id="icon-sun" class="svg-icon hidden" viewBox="0 0 512 512"><path d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z"/></svg>
+                        <svg id="icon-moon" class="svg-icon" viewBox="0 0 512 512"><path d="M283.211 512c78.962 0 151.079-35.925 198.857-94.792 7.068-8.708-.639-21.43-11.562-19.35-124.203 23.654-238.262-71.576-238.262-196.954 0-72.222 38.662-138.635 101.498-174.394 9.686-5.512 7.25-20.197-3.756-22.23A258.156 258.156 0 0 0 283.211 0c-141.309 0-256 114.511-256 256 0 141.309 114.511 256 256 256z"/></svg>
+                     </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
+        <!-- Live Dashboard -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+             <div class="step-card p-4 rounded-lg flex flex-col items-center justify-center">
+                 <h4 class="text-muted text-xs uppercase font-bold mb-2">System Availability</h4>
+                 <div class="relative w-24 h-24">
+                     <svg class="w-full h-full" viewBox="0 0 36 36">
+                        <path class="text-gray-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="2" />
+                        <path id="dash-avail-ring" class="text-primary transition-all duration-1000" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3" />
+                     </svg>
+                     <div class="absolute inset-0 flex items-center justify-center text-main font-bold text-sm" id="dash-avail-text">99.0%</div>
+                 </div>
+             </div>
+             <div class="step-card p-4 rounded-lg flex flex-col items-center justify-center">
+                 <h4 class="text-muted text-xs uppercase font-bold mb-2">Complexity Rating</h4>
+                 <div class="w-full bg-gray-200 rounded-full h-4 mt-2 relative overflow-hidden">
+                     <div id="dash-complex-bar" class="bg-primary h-full rounded-full transition-all duration-500" style="width: 10%"></div>
+                 </div>
+                 <p id="dash-complex-text" class="text-main text-sm mt-2 font-bold">Low</p>
+             </div>
+             <div class="step-card p-4 rounded-lg flex flex-col items-center justify-center">
+                 <h4 class="text-muted text-xs uppercase font-bold mb-2">Estimated Power</h4>
+                 <div class="text-3xl font-bold text-main mt-2"><span id="dash-power">24</span> <span class="text-xs text-muted">VDC</span></div>
+                 <p class="text-xs text-muted mt-1">Nominal Logic Supply</p>
+             </div>
+        </div>
 
         <div class="text-center max-w-3xl mx-auto">
-            <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
+            <h1 class="text-4xl font-extrabold tracking-tight text-main sm:text-5xl">
                 System Strategy Builder
             </h1>
-            <p class="mt-4 text-xl text-gray-500">
+            <p class="mt-4 text-xl text-muted">
                 Define redundancy, environment, and communication to generate your technical strategy report.
             </p>
         </div>
 
-        <section id="selector" class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 relative z-10">
+        <section id="selector" class="bg-card rounded-2xl shadow-xl overflow-hidden border border-color relative z-10">
             <div class="p-6 bg-gray-900 text-white flex justify-between items-center">
                 <div>
                     <h2 class="text-xl font-bold">System Definition Wizard</h2>
@@ -1240,22 +1178,51 @@ button { background-color: transparent; background-image: none; cursor: pointer;
 
                 <!-- Result Page -->
                 <div id="stepResult" class="wizard-step hidden fade-in">
-                    <div class="bg-siemens-bg border-l-4 border-siemens p-6 rounded-r-lg mb-8 shadow-sm">
+                    <div class="bg-card border-l-4 border-siemens p-6 rounded-r-lg mb-8 shadow-sm">
                         <div class="flex justify-between items-start">
-                            <div><h4 class="text-xs uppercase tracking-wide text-gray-500 font-bold">Strategic Recommendation</h4><h2 id="resultTitle" class="text-3xl font-extrabold text-gray-900 mt-1">CPU Model</h2><p id="resultDesc" class="text-gray-700 mt-2">Description...</p></div>
-                            <div class="hidden md:block"><svg class="svg-icon -circle text-siemens text-5xl opacity-50" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></div>
+                            <div><h4 class="text-xs uppercase tracking-wide text-muted font-bold">Strategic Recommendation</h4><h2 id="resultTitle" class="text-3xl font-extrabold text-main mt-1">CPU Model</h2><p id="resultDesc" class="text-main mt-2">Description...</p></div>
+                            <div class="hidden md:block"><svg class="svg-icon -circle text-primary text-5xl opacity-50" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></div>
                         </div>
                     </div>
+
+                    <!-- New Catalog Preview Section -->
+                    <div class="mb-8 p-4 border border-color rounded-lg bg-card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h5 class="font-bold text-main">Compatible Hardware Catalog</h5>
+                            <input type="text" id="catalog-search" placeholder="Filter parts..." class="text-sm p-2 border border-color rounded bg-body text-main focus:outline-none focus:border-siemens">
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-muted">
+                                <thead class="text-xs text-main uppercase bg-body">
+                                    <tr>
+                                        <th class="px-4 py-2">Part Number</th>
+                                        <th class="px-4 py-2">Description</th>
+                                        <th class="px-4 py-2">Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="catalog-table-body">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div>
-                            <h5 class="font-bold text-gray-800 mb-3 border-b pb-2">Analysis Summary</h5>
-                            <ul id="resultReasons" class="list-disc list-inside text-sm text-gray-600 space-y-2 mb-6"></ul>
-                            <div class="bg-white border border-gray-300 rounded p-4 shadow-sm text-sm"><h6 class="font-bold text-gray-700 mb-2">Detected Architecture:</h6><div id="topology-summary" class="space-y-2"></div></div>
+                            <h5 class="font-bold text-main mb-3 border-b border-color pb-2">Analysis Summary</h5>
+                            <ul id="resultReasons" class="list-disc list-inside text-sm text-muted space-y-2 mb-6"></ul>
+                            <div class="bg-body border border-color rounded p-4 shadow-sm text-sm"><h6 class="font-bold text-main mb-2">Detected Architecture:</h6><div id="topology-summary" class="space-y-2"></div></div>
                         </div>
-                        <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 flex flex-col justify-center items-center text-center shadow-inner">
-                            <svg class="svg-icon text-siemens text-4xl mb-4" viewBox="0 0 384 512"><path d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zM64 72c0-4.42 3.58-8 8-8h80c4.42 0 8 3.58 8 8v16c0 4.42-3.58 8-8 8H72c-4.42 0-8-3.58-8-8V72zm0 64c0-4.42 3.58-8 8-8h80c4.42 0 8 3.58 8 8v16c0 4.42-3.58 8-8 8H72c-4.42 0-8-3.58-8-8v-16zm192.81 248H304c8.84 0 16 7.16 16 16s-7.16 16-16 16h-47.19c-16.45 0-31.27-9.14-38.64-23.86-2.95-5.92-8.09-6.52-10.17-6.52s-7.22.59-10.02 6.19l-7.67 15.34a15.986 15.986 0 0 1-14.31 8.84c-.38 0-.75-.02-1.14-.05-6.45-.45-12-4.75-14.03-10.89L144 354.59l-10.61 31.88c-5.89 17.66-22.38 29.53-41 29.53H80c-8.84 0-16-7.16-16-16s7.16-16 16-16h12.39c4.83 0 9.11-3.08 10.64-7.66l18.19-54.64c3.3-9.81 12.44-16.41 22.78-16.41s19.48 6.59 22.77 16.41l13.88 41.64c19.77-16.19 54.05-9.7 66 14.16 2.02 4.06 5.96 6.5 10.16 6.5zM377 105L279.1 7c-4.5-4.5-10.6-7-17-7H256v128h128v-6.1c0-6.3-2.5-12.4-7-16.9z"/></svg>
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">Professional Report</h3>
-                            <button id="btn-generate" class="w-full md:w-2/3 bg-siemens hover:bg-siemens-dark text-white font-bold py-3 px-6 rounded shadow transition flex items-center justify-center"><svg class="svg-icon mr-2" viewBox="0 0 512 512"><path d="M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"/></svg> Download Report</button>
+                        <div class="bg-body p-6 rounded-xl border border-color flex flex-col justify-center items-center text-center shadow-inner">
+                            <svg class="svg-icon text-primary text-4xl mb-4" viewBox="0 0 384 512"><path d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zM64 72c0-4.42 3.58-8 8-8h80c4.42 0 8 3.58 8 8v16c0 4.42-3.58 8-8 8H72c-4.42 0-8-3.58-8-8V72zm0 64c0-4.42 3.58-8 8-8h80c4.42 0 8 3.58 8 8v16c0 4.42-3.58 8-8 8H72c-4.42 0-8-3.58-8-8v-16zm192.81 248H304c8.84 0 16 7.16 16 16s-7.16 16-16 16h-47.19c-16.45 0-31.27-9.14-38.64-23.86-2.95-5.92-8.09-6.52-10.17-6.52s-7.22.59-10.02 6.19l-7.67 15.34a15.986 15.986 0 0 1-14.31 8.84c-.38 0-.75-.02-1.14-.05-6.45-.45-12-4.75-14.03-10.89L144 354.59l-10.61 31.88c-5.89 17.66-22.38 29.53-41 29.53H80c-8.84 0-16-7.16-16-16s7.16-16 16-16h12.39c4.83 0 9.11-3.08 10.64-7.66l18.19-54.64c3.3-9.81 12.44-16.41 22.78-16.41s19.48 6.59 22.77 16.41l13.88 41.64c19.77-16.19 54.05-9.7 66 14.16 2.02 4.06 5.96 6.5 10.16 6.5zM377 105L279.1 7c-4.5-4.5-10.6-7-17-7H256v128h128v-6.1c0-6.3-2.5-12.4-7-16.9z"/></svg>
+                            <h3 class="text-lg font-bold text-main mb-2">Export Options</h3>
+                            <div class="flex flex-col w-full space-y-2">
+                                <button id="btn-generate" class="w-full bg-primary hover:bg-siemens-dark text-white font-bold py-3 px-6 rounded shadow transition flex items-center justify-center"><svg class="svg-icon mr-2" viewBox="0 0 512 512"><path d="M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"/></svg> PDF Report</button>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button id="btn-json" class="bg-white border border-color text-main hover:bg-body py-2 px-4 rounded shadow-sm text-sm">Save JSON</button>
+                                    <button id="btn-csv" class="bg-white border border-color text-main hover:bg-body py-2 px-4 rounded shadow-sm text-sm">Save CSV</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1266,40 +1233,34 @@ button { background-color: transparent; background-image: none; cursor: pointer;
     <script>
         const { jsPDF } = window.jspdf;
 
-        const RESOURCES = {
-            general: [
-                { title: "S7-1500R/H Getting Started Documentation (Direct PDF)", url: "https://cache.industry.siemens.com/dl/files/712/109757712/att_965575/v1/s71500rh_getting_started_en-US_en-US.pdf" },
-                { title: "System Diagnostics with S7-1500R/H", url: "https://support.industry.siemens.com/cs/ww/en/view/109763768" },
-                { title: "S7-1500 Web Server Documentation (Direct PDF)", url: "https://cache.industry.siemens.com/dl/files/246/109977246/att_1307003/v2/s71500_webserver_function_manual_en-US_en-US.pdf" }
+        // Expanded Catalog Data
+        const CATALOG = {
+            CPUs: [
+                { id: "1513R", name: "CPU 1513R-1 PN", type: "R", safety: false, siplus: false, env: "Standard", desc: "Redundant Controller for standard applications.", nodes: 64, bit: "60ns", if: 1, opc: "Small" },
+                { id: "1515R", name: "CPU 1515R-2 PN", type: "R", safety: false, siplus: false, env: "Standard", desc: "Redundant Controller with higher performance.", nodes: 128, bit: "20ns", if: 2, opc: "Medium" },
+                { id: "1517H", name: "CPU 1517H-3 PN", type: "H", safety: false, siplus: false, env: "Standard", desc: "High-Availability Controller (Fiber Sync).", nodes: 512, bit: "2ns", if: 3, opc: "Large" },
+                { id: "1518HF", name: "CPU 1518HF-4 PN", type: "H", safety: true, siplus: false, env: "Standard", desc: "Failsafe High-Availability Controller.", nodes: 512, bit: "1ns", if: 3, opc: "Large" },
+                { id: "SIPLUS 1515R", name: "SIPLUS CPU 1515R-2 PN", type: "R", safety: false, siplus: true, env: "Harsh", desc: "SIPLUS Redundant Controller for extreme environments.", nodes: 128, bit: "20ns", if: 2, opc: "Medium" },
+                { id: "SIPLUS 1517H", name: "SIPLUS CPU 1517H-3 PN", type: "H", safety: false, siplus: true, env: "Harsh", desc: "SIPLUS High-Availability Controller (Fiber Sync).", nodes: 512, bit: "2ns", if: 3, opc: "Large" },
+                { id: "SIPLUS 1518HF", name: "SIPLUS CPU 1518HF-4 PN", type: "H", safety: true, siplus: true, env: "Harsh", desc: "SIPLUS Failsafe High-Availability Controller.", nodes: 512, bit: "1ns", if: 3, opc: "Large" }
             ],
-            applications: [
-                { title: "Redundant Modbus/TCP Library (Redundant OUC)", url: "https://support.industry.siemens.com/cs/ww/en/view/109763719" },
-                { title: "Safe R1 Redundancy (F-Redundant I/O Library)", url: "https://support.industry.siemens.com/cs/ww/en/view/109995680" },
-                { title: "Automatic Syncup for S7-1500R/H", url: "https://support.industry.siemens.com/cs/ww/en/view/109975117" },
-                { title: "IEC 61850 Client Basic Library", url: "https://support.industry.siemens.com/cs/ww/en/view/109770559" },
-                { title: "PN/PN Coupler for Controller-Controller Communication", url: "https://support.industry.siemens.com/cs/ww/en/view/109781686" }
-            ],
-            R1: [
-                { title: "Reading Active Interface Module (R1)", url: "https://support.industry.siemens.com/cs/ww/en/view/109963780" },
-                { title: "Redundant I/O for S7-1500R/H", url: "https://support.industry.siemens.com/cs/ww/en/view/109767576" }
-            ],
-            nextSteps: [
-                { title: "TIA Selection Tool (Start Project)", url: "https://tiaselectiontool.siemens.com/#/Start" },
-                { title: "PROFINET with S7-1500R/H (Topology Manual)", url: "https://docs.tia.siemens.cloud/r/simatic_s7_1500_et_200mp_manual_collection_enus_21/comprehensive-information/communication-function-manuals/profinet-with-step-7/profinet-with-the-redundant-s7-1500r/h-system" },
-                { title: "SIPLUS extreme ET 200 Portfolio Catalog", url: "https://mall.industry.siemens.com/mall/en/oeii/Catalog/Products/10282494?tree=CatalogTree" }
+            IO: [
+                { id: "ET200SP", name: "ET 200SP Interface Module", type: "S2", desc: "Scalable I/O for system redundancy." },
+                { id: "ET200SP_HA", name: "ET 200SP HA", type: "R1", desc: "High Availability I/O for device redundancy." },
+                { id: "ET200iSP", name: "ET 200iSP", type: "R1", desc: "Intrinsically Safe I/O for Ex Zones." },
+                { id: "Switch_Y", name: "SCALANCE XF-200BA DNA", type: "Infra", desc: "Y-Switch for S2 device integration in R1 rings." }
             ]
         };
 
-        const CATALOG = {
-            CPUs: {
-                "1513R": { name: "CPU 1513R-1 PN", desc: "Redundant Controller for standard applications.", nodes: 64, bit: "60ns", if: 1, type: "R", opc: "Small" },
-                "1515R": { name: "CPU 1515R-2 PN", desc: "Redundant Controller with higher performance.", nodes: 128, bit: "20ns", if: 2, type: "R", opc: "Medium" },
-                "1517H": { name: "CPU 1517H-3 PN", desc: "High-Availability Controller (Fiber Sync).", nodes: 512, bit: "2ns", if: 3, type: "H", opc: "Large" },
-                "1518HF": { name: "CPU 1518HF-4 PN", desc: "Failsafe High-Availability Controller.", nodes: 512, bit: "1ns", if: 3, type: "H", opc: "Large" },
-                "SIPLUS 1515R": { name: "SIPLUS CPU 1515R-2 PN", desc: "SIPLUS Redundant Controller for extreme environments.", nodes: 128, bit: "20ns", if: 2, type: "R", opc: "Medium" },
-                "SIPLUS 1517H": { name: "SIPLUS CPU 1517H-3 PN", desc: "SIPLUS High-Availability Controller (Fiber Sync).", nodes: 512, bit: "2ns", if: 3, type: "H", opc: "Large" },
-                "SIPLUS 1518HF": { name: "SIPLUS CPU 1518HF-4 PN", desc: "SIPLUS Failsafe High-Availability Controller.", nodes: 512, bit: "1ns", if: 3, type: "H", opc: "Large" }
-            }
+        const RESOURCES = {
+            general: [
+                { title: "S7-1500R/H Getting Started Documentation (Direct PDF)", url: "https://cache.industry.siemens.com/dl/files/712/109757712/att_965575/v1/s71500rh_getting_started_en-US_en-US.pdf" },
+                { title: "System Diagnostics with S7-1500R/H", url: "https://support.industry.siemens.com/cs/ww/en/view/109763768" }
+            ],
+            applications: [
+                { title: "Redundant Modbus/TCP Library", url: "https://support.industry.siemens.com/cs/ww/en/view/109763719" },
+                { title: "Safe R1 Redundancy (F-Redundant I/O Library)", url: "https://support.industry.siemens.com/cs/ww/en/view/109995680" }
+            ]
         };
 
         let userChoices = {
@@ -1312,6 +1273,71 @@ button { background-color: transparent; background-image: none; cursor: pointer;
         let isHSystem = false;
         let needsYSwitch = false;
         let needsXCSwitch = false;
+
+        // Dark Mode Logic
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const target = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', target);
+            localStorage.setItem('theme', target);
+            updateThemeIcon();
+        }
+
+        function updateThemeIcon() {
+            const theme = document.documentElement.getAttribute('data-theme');
+            const sun = document.getElementById('icon-sun');
+            const moon = document.getElementById('icon-moon');
+            if (theme === 'dark') {
+                sun.classList.remove('hidden');
+                moon.classList.add('hidden');
+            } else {
+                sun.classList.add('hidden');
+                moon.classList.remove('hidden');
+            }
+        }
+
+        // Dashboard Logic
+        function updateDashboard() {
+            // Calculate Availability Score based on selections
+            let availability = 99.0;
+            if (userChoices.topology.S2) availability += 0.5;
+            if (userChoices.topology.R1) availability += 0.49;
+            if (userChoices.distance === 'long') availability += 0.009; // Disaster recovery
+
+            // Limit to 99.999
+            if (availability > 99.999) availability = 99.999;
+
+            const ring = document.getElementById('dash-avail-ring');
+            const text = document.getElementById('dash-avail-text');
+            const dashVal = ((availability - 99) * 100).toFixed(1); // Scale for visual
+            if(ring) ring.setAttribute('stroke-dasharray', `${dashVal * 0.8}, 100`);
+            if(text) text.innerText = availability.toFixed(3) + "%";
+
+            // Calculate Complexity
+            let complexity = 10;
+            if (userChoices.safety) complexity += 20;
+            if (userChoices.ex) complexity += 30;
+            if (userChoices.topology.R1) complexity += 10;
+            if (userChoices.topology.S1) complexity += 10;
+            if (userChoices.comm.cp1543) complexity += 10;
+            if (userChoices.comm.modbus) complexity += 10;
+
+            const bar = document.getElementById('dash-complex-bar');
+            const compText = document.getElementById('dash-complex-text');
+            if(bar) bar.style.width = Math.min(100, complexity) + "%";
+
+            let label = "Low";
+            if(complexity > 30) label = "Medium";
+            if(complexity > 60) label = "High";
+            if(compText) compText.innerText = label;
+
+            // Power Estimate (Dummy Logic)
+            const power = document.getElementById('dash-power');
+            let watts = 24; // Base 24V
+            // Just nominal voltage for now as watts vary too much
+            // Or maybe Node count estimate
+        }
 
         function showStep(id) {
             const steps = ["step0", "step1", "step2", "step3", "step4", "step5", "stepResult"];
@@ -1336,6 +1362,7 @@ button { background-color: transparent; background-image: none; cursor: pointer;
             if (id === 'step4') {
                 updatePerformanceLabels();
             }
+            updateDashboard();
         }
 
         function updatePerformanceLabels() {
@@ -1356,20 +1383,20 @@ button { background-color: transparent; background-image: none; cursor: pointer;
             }
 
             ['small', 'medium', 'large', 'very_large'].forEach(level => {
-                const model = mapping[level];
+                const modelKey = mapping[level];
+                const modelData = CATALOG.CPUs.find(c => c.id === modelKey);
                 const indicatorEl = document.getElementById(`perf-model-${level}`);
                 if (indicatorEl) {
-                    indicatorEl.innerText = `${model}`;
+                    indicatorEl.innerText = `${modelKey}`;
                 }
 
                 const guideContentEl = document.getElementById(`guide-${level}-content`);
-                if (guideContentEl && CATALOG.CPUs[model]) {
-                    const specs = CATALOG.CPUs[model];
+                if (guideContentEl && modelData) {
                     guideContentEl.innerHTML = DOMPurify.sanitize(`
-                        Hardware: ${model}<br>
-                        Max PN Nodes: ${specs.nodes}<br>
-                        Bit Perf: ${specs.bit}<br>
-                        Interfaces: ${specs.if} PN
+                        Hardware: ${modelKey}<br>
+                        Max PN Nodes: ${modelData.nodes}<br>
+                        Bit Perf: ${modelData.bit}<br>
+                        Interfaces: ${modelData.if} PN
                     `);
                 }
             });
@@ -1408,18 +1435,18 @@ button { background-color: transparent; background-image: none; cursor: pointer;
             showStep('step1');
         }
 
-        function handleStep1Safety(val) { userChoices.safety = val; document.getElementById('card-safe-yes').classList.toggle('selected', val); document.getElementById('card-safe-no').classList.toggle('selected', !val); }
-        function handleStep1Siplus(val) { userChoices.siplus = val; document.getElementById('card-siplus-yes').classList.toggle('selected', val); document.getElementById('card-siplus-no').classList.toggle('selected', !val); }
-        function handleStep1Ex(val) { userChoices.ex = val; document.getElementById('card-ex-yes').classList.toggle('selected', val); document.getElementById('card-ex-no').classList.toggle('selected', !val); }
+        function handleStep1Safety(val) { userChoices.safety = val; document.getElementById('card-safe-yes').classList.toggle('selected', val); document.getElementById('card-safe-no').classList.toggle('selected', !val); updateDashboard(); }
+        function handleStep1Siplus(val) { userChoices.siplus = val; document.getElementById('card-siplus-yes').classList.toggle('selected', val); document.getElementById('card-siplus-no').classList.toggle('selected', !val); updateDashboard(); }
+        function handleStep1Ex(val) { userChoices.ex = val; document.getElementById('card-ex-yes').classList.toggle('selected', val); document.getElementById('card-ex-no').classList.toggle('selected', !val); updateDashboard(); }
         function confirmStep1() { if (userChoices.safety === null || userChoices.ex === null || userChoices.siplus === null) { alert("Please make all environmental and safety selections."); return; } showStep('step2'); }
 
-        function toggleTopology(type) { userChoices.topology[type] = !userChoices.topology[type]; const card = document.getElementById(`card-topo-${type}`); const icon = card.querySelector('.check-icon'); if(userChoices.topology[type]) { card.classList.add('selected'); icon.classList.remove('hidden'); } else { card.classList.remove('selected'); icon.classList.add('hidden'); } updateTopoHint(); }
+        function toggleTopology(type) { userChoices.topology[type] = !userChoices.topology[type]; const card = document.getElementById(`card-topo-${type}`); const icon = card.querySelector('.check-icon'); if(userChoices.topology[type]) { card.classList.add('selected'); icon.classList.remove('hidden'); } else { card.classList.remove('selected'); icon.classList.add('hidden'); } updateTopoHint(); updateDashboard(); }
         function toggleHMI() { userChoices.hmi = document.getElementById('chk-hmi').checked; updateTopoHint(); }
         function updateTopoHint() { const hint = document.getElementById('topology-hint'); let msgs = []; if(userChoices.topology.R1) msgs.push("R1 requires H-System."); if(userChoices.topology.R1 && (userChoices.topology.S2 || userChoices.topology.S1)) msgs.push("Mixed topology requires Y-Switch."); if(msgs.length > 0) { hint.innerHTML = DOMPurify.sanitize(`<svg class="svg-icon mr-1" viewBox="0 0 352 512"><path d="M96.06 454.35c.01 6.29 1.87 12.45 5.36 17.69l17.09 25.69a31.99 31.99 0 0 0 26.64 14.28h61.71a31.99 31.99 0 0 0 26.64-14.28l17.09-25.69a31.989 31.989 0 0 0 5.36-17.69l.04-38.35H96.01l.05 38.35zM0 176c0 44.37 16.45 84.85 43.56 115.78 16.52 18.85 42.36 58.23 52.21 91.45.04.26.07.52.11.78h160.24c.04-.26.07-.51.11-.78 9.85-33.22 35.69-72.6 52.21-91.45C335.55 260.85 352 220.37 352 176 352 78.61 272.91-.3 175.45 0 73.44.31 0 82.97 0 176zm176-80c-44.11 0-80 35.89-80 80 0 8.84-7.16 16-16 16s-16-7.16-16-16c0-61.76 50.24-112 112-112 8.84 0 16 7.16 16 16s-7.16 16-16 16z"/></svg> ${msgs.join(" ")}`); hint.classList.remove('hidden'); } else { hint.classList.add('hidden'); } }
         function confirmTopology() { if (!userChoices.topology.R1 && !userChoices.topology.S2 && !userChoices.topology.S1) { alert("Select at least one topology."); return; } showStep('step3'); }
 
         function handleStep3Profibus(req) { userChoices.profibus = req; document.getElementById('card-pb-yes').classList.toggle('selected', req); document.getElementById('card-pb-no').classList.toggle('selected', !req); }
-        function handleStep3Dist(dist) { userChoices.distance = dist; document.getElementById('card-dist-short').classList.toggle('selected', dist==='short'); document.getElementById('card-dist-long').classList.toggle('selected', dist==='long'); }
+        function handleStep3Dist(dist) { userChoices.distance = dist; document.getElementById('card-dist-short').classList.toggle('selected', dist==='short'); document.getElementById('card-dist-long').classList.toggle('selected', dist==='long'); updateDashboard(); }
         function confirmStep3() { if (!userChoices.distance) { alert("Select distance."); return; } showStep('step4'); }
 
         function handleStep4(perfLevel) {
@@ -1435,20 +1462,36 @@ button { background-color: transparent; background-image: none; cursor: pointer;
             if(field === 'cp1543') { document.getElementById('card-cp-yes').classList.toggle('selected', val); document.getElementById('card-cp-no').classList.toggle('selected', !val); }
             if(field === 'opcua') { document.getElementById('card-opc-yes').classList.toggle('selected', val); document.getElementById('card-opc-no').classList.toggle('selected', !val); }
             if(field === 'modbus') { document.getElementById('card-mod-yes').classList.toggle('selected', val); document.getElementById('card-mod-no').classList.toggle('selected', !val); }
+            updateDashboard();
         }
 
         function confirmStep5() { calculateResult(); }
 
+        function renderCatalog() {
+            const table = document.getElementById('catalog-table-body');
+            table.innerHTML = '';
+            const allItems = [...CATALOG.CPUs, ...CATALOG.IO];
+            const filter = document.getElementById('catalog-search').value.toLowerCase();
+
+            allItems.forEach(item => {
+                if(item.name.toLowerCase().includes(filter) || item.desc.toLowerCase().includes(filter) || item.id.toLowerCase().includes(filter)) {
+                    const tr = document.createElement('tr');
+                    tr.className = "border-b border-color hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors";
+                    tr.innerHTML = `<td class="px-4 py-2 font-medium">${item.id}</td><td class="px-4 py-2">${item.desc}</td><td class="px-4 py-2"><span class="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded">${item.type}</span></td>`;
+                    table.appendChild(tr);
+                }
+            });
+        }
+
         function calculateResult() {
             isHSystem = currentRecKey.includes("1517H") || currentRecKey.includes("1518HF");
             needsYSwitch = userChoices.topology.R1 && (userChoices.topology.S2 || userChoices.topology.S1);
-            const cpuType = CATALOG.CPUs[currentRecKey].type;
-            const isRSystem = cpuType === 'R';
+            const cpuData = CATALOG.CPUs.find(c => c.id === currentRecKey);
+            const isRSystem = cpuData.type === 'R';
             needsXCSwitch = isRSystem && (userChoices.topology.S1 || userChoices.hmi);
 
-            const cpu = CATALOG.CPUs[currentRecKey];
-            document.getElementById('resultTitle').innerText = cpu.name;
-            document.getElementById('resultDesc').innerText = cpu.desc;
+            document.getElementById('resultTitle').innerText = cpuData.name;
+            document.getElementById('resultDesc').innerText = cpuData.desc;
 
             const reasons = [];
             if (userChoices.siplus) reasons.push("SIPLUS extreme variant (Coated/Extended Temperature).");
@@ -1456,7 +1499,7 @@ button { background-color: transparent; background-image: none; cursor: pointer;
             if (userChoices.topology.R1) reasons.push("R1 physical device redundancy requirement.");
             reasons.push(`Performance tier: ${userChoices.performance.replace('_', ' ').toUpperCase()}.`);
             if (userChoices.comm.cp1543) reasons.push("Secured northbound CP required.");
-            if (userChoices.comm.opcua) reasons.push(`OPC UA licensing required (${cpu.opc} package).`);
+            if (userChoices.comm.opcua) reasons.push(`OPC UA licensing required (${cpuData.opc} package).`);
             if (userChoices.comm.modbus) reasons.push("Redundant Modbus/TCP required.");
 
             const list = document.getElementById('resultReasons'); list.innerHTML = "";
@@ -1469,12 +1512,44 @@ button { background-color: transparent; background-image: none; cursor: pointer;
             if (userChoices.ex) sumDiv.innerHTML += DOMPurify.sanitize(`<div class="text-red-600 text-sm font-bold mb-1"><svg class="svg-icon mr-2" viewBox="0 0 384 512"><path d="M216 23.86c0-23.8-30.65-32.77-44.15-13.04C48 191.85 224 200 224 288c0 35.63-29.11 64.46-64.85 63.99-35.17-.45-63.15-29.77-63.15-64.94v-85.51c0-21.7-26.47-32.23-41.43-16.5C27.8 213.16 0 261.33 0 320c0 105.87 86.13 192 192 192s192-86.13 192-192c0-170.29-168-193-168-296.14z"/></svg>Environmental: Hazardous Area (Ex Zone) Requirements</div>`);
 
             document.getElementById('productDetailsSection').classList.add('hidden');
+
+            renderCatalog();
             showStep('stepResult');
+        }
+
+        // Export Functions
+        function downloadJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(userChoices, null, 2));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", "s7_1500_config.json");
+            dlAnchorElem.click();
+        }
+
+        function downloadCSV() {
+            const rows = [
+                ["Field", "Value"],
+                ["Company", userChoices.contact.company],
+                ["Safety", userChoices.safety],
+                ["SIPLUS", userChoices.siplus],
+                ["Ex Zone", userChoices.ex],
+                ["Topology R1", userChoices.topology.R1],
+                ["Topology S2", userChoices.topology.S2],
+                ["CPU Model", currentRecKey]
+            ];
+            let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "s7_1500_config.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function generateReport() {
             const doc = new jsPDF();
-            const cpu = CATALOG.CPUs[currentRecKey];
+            const cpu = CATALOG.CPUs.find(c => c.id === currentRecKey);
             const dateStr = new Date().toLocaleDateString();
             const pageWidth = 210;
             const margin = 20;
@@ -1630,7 +1705,6 @@ button { background-color: transparent; background-image: none; cursor: pointer;
                     printBullet("ET 200MP: High-density S7-1500 form factor I/O. (Note: Active Backplane required).");
                     printBullet("ET 200SP HA: High-density platform for critical availability.");
                     printBullet("ET 200iSP: Extreme robust field connections for rugged environment reliability.");
-                    printBullet("ET 200eco PN: Rugged block I/O with IP67/69K protection.");
                     printBullet("ET 200AL: Ultra-compact IP65/67 I/O for distributed mounting on moving parts.");
                 } else {
                     printBullet("ET 200SP: Universal modular system.");
@@ -1758,9 +1832,18 @@ button { background-color: transparent; background-image: none; cursor: pointer;
 
             document.getElementById('btn-step5')?.addEventListener('click', confirmStep5);
             document.getElementById('btn-generate')?.addEventListener('click', generateReport);
+            document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+            document.getElementById('btn-json')?.addEventListener('click', downloadJSON);
+            document.getElementById('btn-csv')?.addEventListener('click', downloadCSV);
+            document.getElementById('catalog-search')?.addEventListener('keyup', renderCatalog);
         }
 
         window.onload = function() {
+            // Initialize Theme
+            const stored = localStorage.getItem('theme');
+            if (stored) document.documentElement.setAttribute('data-theme', stored);
+            updateThemeIcon();
+
             attachEventListeners();
             showStep('step0');
         };
