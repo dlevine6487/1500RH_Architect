@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'sha256-0kaYYq3qitkkVZpP/6uKTJwfTpqFNM6OHDbsaYzw9Uw=' 'sha256-mMzxeqEMILsTAXYmGPzJtqs6Tn8mtgcdZNC0EVTfOHU=' 'sha256-zoF3GF/5hG//rdcqzu9eLRAWQByftkRGvMa5WJZXPTw='; style-src 'self' 'unsafe-inline';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'sha256-0kaYYq3qitkkVZpP/6uKTJwfTpqFNM6OHDbsaYzw9Uw=' 'sha256-vyYAGukY1aN0DW3a0a6ECdpsSIl/LQWVv+/3ijBeoMo=' 'sha256-c6wRK6vYZiqcBhlPTVeRahfDJKykq1hiIozfyjIbSgM='; style-src 'self' 'unsafe-inline'; object-src 'none';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="no-referrer">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Siemens S7-1500 R/H Strategy Architect</title>
@@ -918,9 +920,9 @@ button { background-color: transparent; background-image: none; cursor: pointer;
                 <div id="step0" class="wizard-step fade-in">
                     <h3 class="text-lg font-semibold mb-3 text-gray-800"><svg class="svg-icon text-siemens mr-2" viewBox="0 0 576 512"><path d="M528 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-352 96c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64zm112 236.8c0 10.6-10 19.2-22.4 19.2H86.4C74 384 64 375.4 64 364.8v-19.2c0-31.8 30.1-57.6 67.2-57.6h5c12.3 5.1 25.7 8 39.8 8s27.6-2.9 39.8-8h5c37.1 0 67.2 25.8 67.2 57.6v19.2zM512 312c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-64c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-64c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16z"/></svg>Project Details</h3>
                     <div class="space-y-4 max-w-lg mb-8">
-                        <div><label class="block text-sm font-medium text-gray-700">Customer Company Name</label><input type="text" id="contactCompany" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-siemens focus:ring-siemens" placeholder="e.g. Acme Manufacturing"></div>
-                        <div><label class="block text-sm font-medium text-gray-700">Customer Contact Name</label><input type="text" id="contactCustomer" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-siemens focus:ring-siemens" placeholder="e.g. John Doe"></div>
-                        <div><label class="block text-sm font-medium text-gray-700">Siemens Sales Consultant</label><input type="text" id="contactSales" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-siemens focus:ring-siemens" placeholder="e.g. Jane Smith"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Customer Company Name</label><input type="text" id="contactCompany" maxlength="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-siemens focus:ring-siemens" placeholder="e.g. Acme Manufacturing"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Customer Contact Name</label><input type="text" id="contactCustomer" maxlength="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-siemens focus:ring-siemens" placeholder="e.g. John Doe"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Siemens Sales Consultant</label><input type="text" id="contactSales" maxlength="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-siemens focus:ring-siemens" placeholder="e.g. Jane Smith"></div>
                     </div>
                     <button id="btn-step0" class="bg-siemens hover:bg-siemens-dark text-white px-6 py-2 rounded font-bold text-sm transition shadow-md flex items-center">Start Configuration <svg class="svg-icon ml-2" viewBox="0 0 448 512"><path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"/></svg></button>
 
@@ -1400,9 +1402,9 @@ button { background-color: transparent; background-image: none; cursor: pointer;
         }
 
         function confirmStep0() {
-            userChoices.contact.company = document.getElementById('contactCompany').value;
-            userChoices.contact.customer = document.getElementById('contactCustomer').value;
-            userChoices.contact.sales = document.getElementById('contactSales').value;
+            userChoices.contact.company = DOMPurify.sanitize(document.getElementById('contactCompany').value).trim().substring(0, 100);
+            userChoices.contact.customer = DOMPurify.sanitize(document.getElementById('contactCustomer').value).trim().substring(0, 100);
+            userChoices.contact.sales = DOMPurify.sanitize(document.getElementById('contactSales').value).trim().substring(0, 100);
             const banner = document.getElementById('productDetailsSection');
             if (banner) banner.classList.remove('hidden');
             showStep('step1');
@@ -1632,12 +1634,14 @@ button { background-color: transparent; background-image: none; cursor: pointer;
                     printBullet("ET 200iSP: Extreme robust field connections for rugged environment reliability.");
                     printBullet("ET 200eco PN: Rugged block I/O with IP67/69K protection.");
                     printBullet("ET 200AL: Ultra-compact IP65/67 I/O for distributed mounting on moving parts.");
+                    printBullet("ET 200Clean: Hygienic IP69K stainless steel I/O for food & pharma.");
                 } else {
                     printBullet("ET 200SP: Universal modular system.");
                     printBullet("ET 200MP: S7-1500 form factor. (Note: Active Backplane required for hotswap feature).");
                     printBullet("ET 200pro: Cabinet-free IP65/67 modular I/O for machine mounting.");
                     printBullet("ET 200eco PN: Rugged block I/O with IP67/69K protection.");
                     printBullet("ET 200AL: Ultra-compact IP65/67 I/O for distributed mounting on moving parts.");
+                    printBullet("ET 200Clean: Hygienic IP69K stainless steel I/O for food & pharma.");
                     printBullet("ET 200SP HA: High-density platform for critical availability.");
                     printBullet("ET 200iSP: Extreme robust field connections for rugged environment reliability.");
                 }

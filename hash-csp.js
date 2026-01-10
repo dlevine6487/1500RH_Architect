@@ -34,7 +34,8 @@ function generateCSP() {
         // We permit unsafe-inline for styles to support the inline CSS and style attributes
         // We use hashes for scripts
         // We allow data: and blob: for images/PDFs
-        const newCspContent = `default-src 'self' data: blob:; script-src 'self' ${allHashes}; style-src 'self' 'unsafe-inline';`;
+        // We explicitly block object-src to prevent Flash/applets
+        const newCspContent = `default-src 'self' data: blob:; script-src 'self' ${allHashes}; style-src 'self' 'unsafe-inline'; object-src 'none';`;
 
         const updatedContent = content.replace(metaRegex, `<meta http-equiv="Content-Security-Policy" content="${newCspContent}">`);
 
